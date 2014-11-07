@@ -48,58 +48,115 @@
 
 
 <style scoped>
-.outerwrapper{width:100%;min-height:900px;position:relative;border:1px solid #c8c7cf}.outerwrapper h2,.outerwrapper h3,.outerwrapper p{padding:10px 10px 0;margin:0}
+.status-message {
+  border: 1px solid #c00;
+  background: #fac7c7;
+  padding: 10px; }
+
+.outerwrapper {
+  width: 100%;
+  min-height: 900px;
+  position: relative;
+  border: 1px solid #c8c7cf; }
+  .outerwrapper h2, .outerwrapper h3, .outerwrapper p {
+    padding: 10px 10px 0 10px;
+    margin: 0; }
+
 </style>
 <div class="outerwrapper">
 	<div class="chart"></div>
 </div>
 <!--[if gt IE 8]><!-->
 <script type="text/javascript">
-(function() {
-		var init = function($)
-		{
+function extendObject (myObject) {
+	/*	Referenced from: http://addyosmani.com/resources/essentialjsdesignpatterns/book/#observerpatternjavascript */
+	
+	/*	Storage for topics that can be broadcast or listened to */
+	var topics = {};
 
-		/*	==================================================================================== */
-		/*	GLOBAL VARIABLES FOR D3 */
+	/*	A topic identifyer */
+	var subUid = -1;
 
-		/*  Colours for the bars */
-		var allBars = ["#1abc9c","#27ae60","#3498db","#5959b7","#EB6B4B"];
+	/*	Publish or broadcast events of interest
+		with a specific topic name and arguments
+		such as the data to pass along */
+	myObject.publish = function ( topic, args ) {
+		
+		if ( !topics[topic] ) {
+			return false;
+		}
 
-		/*	Margin, Width and height */
-		var margin = {top: 15, right: 20, bottom: 20, left: 90};
-		var width = $('.outerwrapper').width()  - margin.left - margin.right;
-		var height = 350 - margin.top - margin.bottom;
-		/*	Global variable to control the length of D3 transitons */
-		var duration = 450;
+		var subscribers = topics[topic];
+		var len = subscribers ? subscribers.length : 0;
 
-		/*	==================================================================================== */
-		/*	jQuery ready */
+		while (len--) {
+			subscribers[len].func( topic, args );
+		}	
 
-			/*	==================================================================================== */
-			/*	Load D3 */
-			/*	All of the D3/svg code is contained within the call back function */
-			/*	Loading D3 into ie6-8 seems to cause a runtime error */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+		return this;
+	};
 
+	/*	Subscribe to events of interest with a specific topic name and a 
+		callback function, to be executed with the topic/event is observed */
+	myObject.subscribe = function ( topic, func, parent ) {
+		
+		if ( !topics[topic] ) {
+			topics[topic] = [];
+		}
 
-			}); /* End of d3js getscript call
+		var token = ( ++subUid ).toString();
+		topics[topic].push({
+			token: token,
+			func: func,
+			parent: parent
+		});
+		return token;
+	};
 
-		/* End of active code */
-		};
+}
+function buildParams () {
+	var params = {};
 
+	var height = 400;
 
-	setTimeout(function()
-	{
-	if (typeof jQuery !== 'undefined')
-	{
-		init(jQuery);
-	} else
-	{
-		setTimeout(arguments.callee, 60);
+	/*	Reduce height of main graphic for smaller screens */
+	if (jQuery('.section').width() < 480 ) {
+		height = 300;
 	}
-	}, 60);
 
-})();
+	params.colour =  ["#c1272d",   /* 1 */
+							"#2a6755", /* 2 */
+							"#fbb03b", /* 3 */
+							"#d9e021", /* 3 */
+							"#39b54a", /* 4 */
+							"#00a99d", /* 5 */
+							"#0071bc", /* 6 */
+							"#1b1464", /* 7 */
+							"#93278f", /* 8 */
+							"#8c6239"  /* 9 */
+						];
+
+	/*	Margin, Width and height */
+	params.margin = {top: 15, right: 30, bottom: 40, left: 80};
+	params.lifeCycleMargin = {top: 10, right: 10, bottom: 20, left: 70};
+	params.width = jQuery('.section').width()  - params.margin.left - params.margin.right;
+	params.height = height - params.margin.top - params.margin.bottom;
+	/*	Global variable to control the length of D3 transitons */
+	params.duration = 450;
+	params.delay = 450;
+
+	return params;
+
+}
+
+BuildWidget.prototype.buttonClick = function() {
+	var self = this;
+
+};
+
+BuildWidget.prototype.upDateButtons = function () {
+	var self = this;
+};
 function BuildWidget (target, params, data) {
 	this.target = target;
 	this.params = params;
@@ -141,6 +198,49 @@ BuildWidget.prototype.buildBrush = function () {
 
 };
 
+(function() {
+		var init = function($)
+		{
+
+		/*	==================================================================================== */
+		/*	GLOBAL VARIABLES FOR D3 */
+
+		/*  Colours for the bars */
+		var allBars = ["#1abc9c","#27ae60","#3498db","#5959b7","#EB6B4B"];
+
+		/*	Margin, Width and height */
+		var margin = {top: 15, right: 20, bottom: 20, left: 90};
+		var width = $('.outerwrapper').width()  - margin.left - margin.right;
+		var height = 350 - margin.top - margin.bottom;
+		/*	Global variable to control the length of D3 transitons */
+		var duration = 450;
+
+		/*	==================================================================================== */
+		/*	jQuery ready */
+
+			/*	==================================================================================== */
+			/*	Load D3 */
+			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+
+
+			}); /* End of d3js getscript call
+
+		/* End of active code */
+		};
+
+
+	setTimeout(function()
+	{
+	if (typeof jQuery !== 'undefined')
+	{
+		init(jQuery);
+	} else
+	{
+		setTimeout(arguments.callee, 60);
+	}
+	}, 60);
+
+})();
 </script>
 <!--<![endif]-->
 <!-- ========= PASTED POLOPOLY FOOTER BELOW ========= -->

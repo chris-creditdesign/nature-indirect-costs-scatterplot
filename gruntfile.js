@@ -37,12 +37,15 @@ module.exports = function(grunt){
 						'assets/concat/style-close.txt',
 						'assets/widget.html',
 						'assets/concat/script-open.txt',
-						'assets/js/index.js',
+						'assets/js/pubsub.js',
+						'assets/js/params.js',
+						'assets/js/buttons.js',
 						'assets/js/build_widget/buildWidget.js',
 						'assets/js/build_widget/buildScales.js',
 						'assets/js/build_widget/buildGraphic.js',
 						'assets/js/build_widget/buildAxes.js',
 						'assets/js/build_widget/buildBrush.js',
+						'assets/js/index.js',
 						'assets/concat/script-close.txt',
 						'assets/concat/polopoly-footer.html'
 						],
@@ -55,12 +58,15 @@ module.exports = function(grunt){
 						'assets/concat/style-close.txt',
 						'assets/widget.html',
 						'assets/concat/script-open.txt',
-						'assets/js/index.js',
+						'assets/js/pubsub.js',
+						'assets/js/params.js',
+						'assets/js/buttons.js',
 						'assets/js/build_widget/buildWidget.js',
 						'assets/js/build_widget/buildScales.js',
 						'assets/js/build_widget/buildGraphic.js',
 						'assets/js/build_widget/buildAxes.js',
 						'assets/js/build_widget/buildBrush.js',
+						'assets/js/index.js',
 						'assets/concat/script-close.txt',
 						],
 				dest: 'dist/index.html'
@@ -84,7 +90,7 @@ module.exports = function(grunt){
 		        tasks: ['buildcss','concat']
 		    },
 			concat: {
-				files: ['assets/*'],
+				files: ['assets/*','assets/js/*.js'],
 				tasks: ['jshint','concat']
 			}
 		}

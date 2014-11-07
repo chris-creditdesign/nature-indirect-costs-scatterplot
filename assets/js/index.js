@@ -20,8 +20,6 @@
 
 			/*	==================================================================================== */
 			/*	Load D3 */
-			/*	All of the D3/svg code is contained within the call back function */
-			/*	Loading D3 into ie6-8 seems to cause a runtime error */
 			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
 
