@@ -19,7 +19,8 @@
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
-					idcGraphic.buildScatterPlot();
+					idcGraphic.buildBrush();
+					idcGraphic.enterScatterPlot();
 				});
 
 			}); /* End of d3js getscript call

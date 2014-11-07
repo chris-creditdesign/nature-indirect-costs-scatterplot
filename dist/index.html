@@ -107,9 +107,10 @@ function buildParams () {
 	params.colour =  ["#e41a1c","#377eb8","#a65628","#984ea3"];
 
 	/*	Margin, Width and height */
-	params.margin = {top: 20, right: 20, bottom: 60, left: 60};
-	params.width = jQuery('.section').width()  - params.margin.left - params.margin.right;
-	params.height = jQuery('.section').width() - params.margin.top - params.margin.bottom;
+	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
+	params.brushThickness = 60;
+	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
+	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 	/*	Global variable to control the length of D3 transitons */
 	params.duration = 450;
 	params.delay = 450;
@@ -163,7 +164,15 @@ BuildWidget.prototype.buildScales = function () {
 					.range([this.params.height, 0])
 					.domain([0,100]);
 
+	this.yBrushScale = d3.scale.linear()
+					.range([this.params.height, 0])
+					.domain([0,100]);
+
 	this.xScale = d3.scale.linear()
+					.range([0, this.params.width])
+					.domain([0,100]);
+
+	this.xBrushScale = d3.scale.linear()
 					.range([0, this.params.width])
 					.domain([0,100]);
 
@@ -175,47 +184,77 @@ BuildWidget.prototype.buildScales = function () {
 
 BuildWidget.prototype.buildGraphic = function () {
 	this.svg = d3.select(this.target  + " > .chart").append("svg")
-		.attr("width", this.params.width + this.params.margin.left + this.params.margin.right)
-		.attr("height", this.params.height + this.params.margin.top + this.params.margin.bottom);
+		.attr("width", this.params.width + this.params.margin.left + this.params.brushThickness + this.params.margin.mid + this.params.margin.right)
+		.attr("height", this.params.height + this.params.margin.top + this.params.brushThickness + this.params.margin.mid + this.params.margin.bottom);
 
-		this.scatterGroup = this.svg.append("g")
+	var clip = this.svg.append("defs").append("svg:clipPath")
+					.attr("id", "clip")
+				  .append("svg:rect")
+					.attr("id", "clip-rect")
+					.attr("x", "0")
+					.attr("y", "0")
+					.attr("width", this.params.width)
+					.attr("height", this.params.height);
+
+
+	this.scatterGroup = this.svg.append("g")
 						.attr("class","scatterGroup")
+						.attr("clip-path", "url(#clip)")
+						.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
+
+	this.xBrushGroup = this.svg.append("g")
+						.attr("class","xBrushGroup")
+						.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height + this.params.margin.mid)+ ")");
+
+	this.yBrushGroup = this.svg.append("g")
+						.attr("class","yBrushGroup")
 						.attr("transform","translate(" + this.params.margin.left + "," + this.params.margin.top + ")");
+
 
 };
 
 BuildWidget.prototype.buildAxes = function () {
 	this.yAxis = d3.svg.axis()
 					.scale(this.yScale)
-					.tickSize(3,3)
+					.tickSize(3,0)
 					.orient("left");
 
 	this.xAxis = d3.svg.axis()
 					.scale(this.xScale)
-					.tickSize(3,3)
+					.tickSize(3,0)
 					.orient("bottom");
 
 	/* Prepare the y axis */
 	this.svg.append("g")
 		.attr("class", "y axis")
+		.attr("transform", "translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")")
+		.call(this.yAxis);
+
+	this.svg.append("g")
+		.attr("class", "y-brush axis")
 		.attr("transform", "translate(" + this.params.margin.left + "," + this.params.margin.top + ")")
-		.call(this.yAxis)
+		.call(this.yAxis)	
 	  .append("g")
 		.attr("class", "axisLabel")
 	  .append("text")
-		.attr("transform", "translate(" + -(this.params.margin.left * 0.5) + "," + (this.params.height / 2) + "), rotate(-90)")
+		.attr("transform", "translate(" + -(this.params.margin.left * 0.6) + "," + (this.params.height / 2) + "), rotate(-90)")
 		.style("text-anchor", "middle")
 		.text("Actual Indirect Cost (%)");
 
 	/*	Prepare the x axis */
 	this.svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height) + ")")
+		.attr("transform", "translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height) + ")")
 		.call(this.xAxis)
+
+	this.svg.append("g")
+		.attr("class", "x-brush axis")
+		.attr("transform", "translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height + this.params.margin.mid + this.params.brushThickness) + ")")
+		.call(this.xAxis)	
 	  .append("g")
 		.attr("class","axisLabel")
 	  .append("text")
-		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.6) + ")")
+		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.7) + ")")
 		.style("text-anchor","middle")
 		.text("Negotiated Indirect Cost (%)");
 
@@ -224,29 +263,86 @@ BuildWidget.prototype.buildAxes = function () {
 BuildWidget.prototype.buildBrush = function () {
 	var self = this;
 
-	var display = function () {
+	var updateView = function () {
+		self.updateScatterPlot();
+		self.svg.selectAll(".x.axis").call(self.xAxis);
+		self.svg.selectAll(".y.axis").call(self.yAxis);
 
 	};
 
-	var brushend = function () {
+	var xDisplay = function () {
+		var extent = xBrush.extent();
 
+		self.xScale.domain(extent);
+
+		updateView();
 	};
 
-	var brush = d3.svg.brush()
-					.x(this.xScaleBrush)
-					.extent([0, this.params.width])
-					.on("brush", display)
-					.on("brushend", brushend);
+	var xBrushend = function () {
+		if (xBrush.extent()[0] === xBrush.extent()[1]) {
+			d3.select(this).call(xBrush.extent([0, 100]));
+			self.xScale.domain([0,100]);
+
+			updateView();
+		}
+	};
+
+	var yDisplay = function () {
+		var extent = yBrush.extent();
+
+		self.yScale.domain(extent);
+
+		updateView();
+		
+	};
+
+	var yBrushend = function () {
+		if (yBrush.extent()[0] === yBrush.extent()[1]) {
+			d3.select(this).call(yBrush.extent([0, 100]));
+			self.yScale.domain([0,100]);
+
+			updateView();
+		}
+	};
+
+	var xBrush = d3.svg.brush()
+					.x(this.xBrushScale)
+					.extent([0, 100])
+					.on("brush", xDisplay)
+					.on("brushend", xBrushend);
+
+	var yBrush = d3.svg.brush()
+					.y(this.yBrushScale)
+					.extent([0,100])
+					.on("brush", yDisplay)
+					.on("brushend", yBrushend)
+
+	this.xBrushGroup.append("g")
+		.attr("class", "brush")
+		.call(xBrush)
+		.selectAll("rect")
+		.attr("fill","#999")
+		.attr("height", this.params.brushThickness );
+
+	this.yBrushGroup.append("g")
+		.attr("class", "brush")
+		.call(yBrush)
+		.selectAll("rect")
+		.attr("fill", "#999")
+		.attr("width", this.params.brushThickness)
+
 
 };
 
-BuildWidget.prototype.buildScatterPlot = function () {
+BuildWidget.prototype.enterScatterPlot = function () {
 	var self = this;
 
 	var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
 
 	this.scatterGroup.selectAll("circle")
-			.data(this.data)
+			.data(this.data, function (d) {
+				return d.organization_name;
+			})
 			.enter()
 		  .append("circle")
 			.attr("cx", function (d) {
@@ -286,6 +382,20 @@ BuildWidget.prototype.buildScatterPlot = function () {
 			return self.params.colour[i];
 		});
 };
+
+BuildWidget.prototype.updateScatterPlot = function () {
+	var self = this;
+
+	this.scatterGroup.selectAll("circle")
+			.attr("cx", function (d) {
+				return self.xScale(d.FY13);
+			})
+			.attr("cy", function (d) {
+				return self.yScale(d.calculated_indirect_cost);
+			});
+
+};
+
 (function() {
 		var init = function($)
 		{
@@ -307,7 +417,8 @@ BuildWidget.prototype.buildScatterPlot = function () {
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
-					idcGraphic.buildScatterPlot();
+					idcGraphic.buildBrush();
+					idcGraphic.enterScatterPlot();
 				});
 
 			}); /* End of d3js getscript call

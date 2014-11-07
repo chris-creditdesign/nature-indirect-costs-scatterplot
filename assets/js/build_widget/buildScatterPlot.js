@@ -1,10 +1,12 @@
-BuildWidget.prototype.buildScatterPlot = function () {
+BuildWidget.prototype.enterScatterPlot = function () {
 	var self = this;
 
 	var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
 
 	this.scatterGroup.selectAll("circle")
-			.data(this.data)
+			.data(this.data, function (d) {
+				return d.organization_name;
+			})
 			.enter()
 		  .append("circle")
 			.attr("cx", function (d) {
@@ -43,4 +45,17 @@ BuildWidget.prototype.buildScatterPlot = function () {
 		.style("border-color", function(d,i) { 
 			return self.params.colour[i];
 		});
+};
+
+BuildWidget.prototype.updateScatterPlot = function () {
+	var self = this;
+
+	this.scatterGroup.selectAll("circle")
+			.attr("cx", function (d) {
+				return self.xScale(d.FY13);
+			})
+			.attr("cy", function (d) {
+				return self.yScale(d.calculated_indirect_cost);
+			});
+
 };
