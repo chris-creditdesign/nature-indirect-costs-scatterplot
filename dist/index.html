@@ -13,8 +13,14 @@
   position: relative;
   border: 1px solid #c8c7cf;
   display: none; }
-  .outer-wrapper h2, .outer-wrapper h3, .outer-wrapper p {
+  .outer-wrapper h2 {
     padding: 10px 10px 0 10px;
+    margin: 0; }
+  .outer-wrapper h3 {
+    padding: 0 10px;
+    margin: 0; }
+  .outer-wrapper p {
+    padding: 10px;
     margin: 0; }
   .outer-wrapper .axis path, .outer-wrapper .axis line {
     fill: none;
@@ -25,6 +31,13 @@
     fill: #666;
     font-size: 13px;
     shape-rendering: crispEdges; }
+  .outer-wrapper .scale {
+    margin-left: 30px; }
+  .outer-wrapper .palette {
+    border-left: 20px solid;
+    padding-left: 4px;
+    display: inline-block;
+    margin: 10px; }
 
 </style>
 <div class="status-message">
@@ -33,7 +46,12 @@
 </div>
 
 <div class="outer-wrapper" id="idc-graphic">
+	<h2>Negotiated Indirect Cost vs Actual Calculated Indirect Cost</h2>
+
 	<div class="chart"></div>
+
+	<div class="scale"></div>
+
 </div>
 <!--[if gt IE 8]><!-->
 <script type="text/javascript">
@@ -86,20 +104,10 @@ function extendObject (myObject) {
 function buildParams () {
 	var params = {};
 
-	params.colour =  ["#c1272d",   /* 1 */
-							"#2a6755", /* 2 */
-							"#fbb03b", /* 3 */
-							"#d9e021", /* 3 */
-							"#39b54a", /* 4 */
-							"#00a99d", /* 5 */
-							"#0071bc", /* 6 */
-							"#1b1464", /* 7 */
-							"#93278f", /* 8 */
-							"#8c6239"  /* 9 */
-						];
+	params.colour =  ["#e41a1c","#377eb8","#a65628","#984ea3"];
 
 	/*	Margin, Width and height */
-	params.margin = {top: 60, right: 60, bottom: 60, left: 60};
+	params.margin = {top: 20, right: 20, bottom: 60, left: 60};
 	params.width = jQuery('.section').width()  - params.margin.left - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.bottom;
 	/*	Global variable to control the length of D3 transitons */
@@ -118,6 +126,22 @@ BuildWidget.prototype.buttonClick = function() {
 BuildWidget.prototype.upDateButtons = function () {
 	var self = this;
 };
+function buildData (data) {
+		
+	for (var i = 0; i < data.length; i++) {
+		data[i].FY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
+		
+		data[i].FY13 = data[i].FY13.length > 0 ? parseFloat(data[i].FY13) : 0;
+		data[i].calculated_indirect_cost = parseFloat(data[i].calculated_indirect_cost);
+
+		data[i].direct_cost = parseInt(data[i].direct_cost, 10);
+		data[i].indirect_cost = parseInt(data[i].indirect_cost, 10);
+		data[i].funding = parseInt(data[i].funding, 10);
+	}
+
+
+	return data;
+}
 function BuildWidget (target, params, data) {
 	this.target = target;
 	this.params = params;
@@ -127,6 +151,14 @@ function BuildWidget (target, params, data) {
 
 BuildWidget.prototype.buildScales = function () {
 	
+	var minValue = d3.min(this.data, function(d) { 
+		return d.funding; 
+	});
+	
+	var maxValue = d3.max(this.data, function(d) { 
+		return d.funding; 
+	});
+
 	this.yScale = d3.scale.linear()
 					.range([this.params.height, 0])
 					.domain([0,100]);
@@ -135,12 +167,20 @@ BuildWidget.prototype.buildScales = function () {
 					.range([0, this.params.width])
 					.domain([0,100]);
 
+	this.radiusScale = d3.scale.linear()
+						.range([2,15])
+						.domain([minValue, maxValue]);
+
 };
 
 BuildWidget.prototype.buildGraphic = function () {
 	this.svg = d3.select(this.target  + " > .chart").append("svg")
 		.attr("width", this.params.width + this.params.margin.left + this.params.margin.right)
 		.attr("height", this.params.height + this.params.margin.top + this.params.margin.bottom);
+
+		this.scatterGroup = this.svg.append("g")
+						.attr("class","scatterGroup")
+						.attr("transform","translate(" + this.params.margin.left + "," + this.params.margin.top + ")");
 
 };
 
@@ -165,7 +205,7 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + -(this.params.margin.left * 0.5) + "," + (this.params.height / 2) + "), rotate(-90)")
 		.style("text-anchor", "middle")
-		.text("Actual Indirect Cost");
+		.text("Actual Indirect Cost (%)");
 
 	/*	Prepare the x axis */
 	this.svg.append("g")
@@ -177,7 +217,7 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.6) + ")")
 		.style("text-anchor","middle")
-		.text("Negotiated Indirect Cost");
+		.text("Negotiated Indirect Cost (%)");
 
 };
 
@@ -200,6 +240,52 @@ BuildWidget.prototype.buildBrush = function () {
 
 };
 
+BuildWidget.prototype.buildScatterPlot = function () {
+	var self = this;
+
+	var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
+
+	this.scatterGroup.selectAll("circle")
+			.data(this.data)
+			.enter()
+		  .append("circle")
+			.attr("cx", function (d) {
+				return self.xScale(d.FY13);
+			})
+			.attr("cy", function (d) {
+				return self.yScale(d.calculated_indirect_cost);
+			})
+			.attr("r", function (d) {
+				return self.radiusScale(d.funding);
+			})
+			.attr("opacity", 0.8)
+			.attr("fill", function (d) {
+				if (d.institution_type === "Higher Ed") {
+					return self.params.colour[0];
+				} else if (d.institution_type === "Hosp") {
+					return self.params.colour[1];
+				} else if (d.institution_type === "NP res inst") {
+					return self.params.colour[2];
+				} else {
+					return self.params.colour[3];
+				}
+			});
+
+	d3.select(".scale")
+	  .append("ul")
+		.selectAll("li")
+		.data(typeOfOrg)
+		.enter()
+	  .append("li")
+		.attr("class", "palette")
+		.attr("title", function(d) { return d.key; })
+		.text(function(d) {
+			return d;
+		})
+		.style("border-color", function(d,i) { 
+			return self.params.colour[i];
+		});
+};
 (function() {
 		var init = function($)
 		{
@@ -214,11 +300,14 @@ BuildWidget.prototype.buildBrush = function () {
 				d3.csv("data/costs-basic.csv", function (data) {
 					var params = buildParams();
 
-					var idcGraphic = new BuildWidget("#idc-graphic", params, data);
+					var idcData = buildData(data);			
+
+					var idcGraphic = new BuildWidget("#idc-graphic", params, idcData);
 
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
+					idcGraphic.buildScatterPlot();
 				});
 
 			}); /* End of d3js getscript call

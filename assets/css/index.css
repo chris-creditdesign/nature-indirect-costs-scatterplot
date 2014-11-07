@@ -12,8 +12,14 @@
   position: relative;
   border: 1px solid #c8c7cf;
   display: none; }
-  .outer-wrapper h2, .outer-wrapper h3, .outer-wrapper p {
+  .outer-wrapper h2 {
     padding: 10px 10px 0 10px;
+    margin: 0; }
+  .outer-wrapper h3 {
+    padding: 0 10px;
+    margin: 0; }
+  .outer-wrapper p {
+    padding: 10px;
     margin: 0; }
   .outer-wrapper .axis path, .outer-wrapper .axis line {
     fill: none;
@@ -24,3 +30,10 @@
     fill: #666;
     font-size: 13px;
     shape-rendering: crispEdges; }
+  .outer-wrapper .scale {
+    margin-left: 30px; }
+  .outer-wrapper .palette {
+    border-left: 20px solid;
+    padding-left: 4px;
+    display: inline-block;
+    margin: 10px; }

@@ -40,8 +40,18 @@
 	border: 1px solid #c8c7cf;
 	display: none;
 
-	h2,h3,p {
+	h2 {
 		padding: 10px 10px 0 10px;
+		margin: 0;
+	}
+
+	h3 {
+		padding: 0 10px;
+		margin: 0;
+	}
+
+	p {
+		padding: 10px;
 		margin: 0;
 	}
 
@@ -59,6 +69,18 @@
 			shape-rendering: crispEdges;
 		} // SVG
 	}
+
+	.scale {
+		margin-left: 30px;
+	}
+	
+	.palette {
+		border-left: 20px solid;
+		padding-left: 4px;
+		display: inline-block;
+		margin: 10px;
+	}
+
 
 } // outerwrapper
 

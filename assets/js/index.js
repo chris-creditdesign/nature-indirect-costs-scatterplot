@@ -12,11 +12,14 @@
 				d3.csv("data/costs-basic.csv", function (data) {
 					var params = buildParams();
 
-					var idcGraphic = new BuildWidget("#idc-graphic", params, data);
+					var idcData = buildData(data);			
+
+					var idcGraphic = new BuildWidget("#idc-graphic", params, idcData);
 
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
+					idcGraphic.buildScatterPlot();
 				});
 
 			}); /* End of d3js getscript call
