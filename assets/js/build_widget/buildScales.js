@@ -1,0 +1,3 @@
+BuildWidget.prototype.buildScales = function () {
+
+};
