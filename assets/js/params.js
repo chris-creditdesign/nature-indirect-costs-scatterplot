@@ -1,13 +1,6 @@
 function buildParams () {
 	var params = {};
 
-	var height = 400;
-
-	/*	Reduce height of main graphic for smaller screens */
-	if (jQuery('.section').width() < 480 ) {
-		height = 300;
-	}
-
 	params.colour =  ["#c1272d",   /* 1 */
 							"#2a6755", /* 2 */
 							"#fbb03b", /* 3 */
@@ -21,10 +14,9 @@ function buildParams () {
 						];
 
 	/*	Margin, Width and height */
-	params.margin = {top: 15, right: 30, bottom: 40, left: 80};
-	params.lifeCycleMargin = {top: 10, right: 10, bottom: 20, left: 70};
+	params.margin = {top: 60, right: 60, bottom: 60, left: 60};
 	params.width = jQuery('.section').width()  - params.margin.left - params.margin.right;
-	params.height = height - params.margin.top - params.margin.bottom;
+	params.height = jQuery('.section').width() - params.margin.top - params.margin.bottom;
 	/*	Global variable to control the length of D3 transitons */
 	params.duration = 450;
 	params.delay = 450;

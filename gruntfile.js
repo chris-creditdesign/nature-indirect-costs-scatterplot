@@ -90,7 +90,7 @@ module.exports = function(grunt){
 		        tasks: ['buildcss','concat']
 		    },
 			concat: {
-				files: ['assets/*','assets/js/*.js'],
+				files: ['assets/*','assets/js/*.js','assets/js/build_widget/*.js'],
 				tasks: ['jshint','concat']
 			}
 		}

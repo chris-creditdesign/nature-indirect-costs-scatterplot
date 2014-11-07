@@ -1,13 +1,26 @@
 .status-message {
   border: 1px solid #c00;
   background: #fac7c7;
-  padding: 10px; }
+  padding: 10px;
+  display: none; }
 
-.outerwrapper {
+.js-disabled .status-message, .ie6 .status-message, .ie7 .status-message, .ie8 .status-message {
+  display: block; }
+
+.outer-wrapper {
   width: 100%;
-  min-height: 900px;
   position: relative;
-  border: 1px solid #c8c7cf; }
-  .outerwrapper h2, .outerwrapper h3, .outerwrapper p {
+  border: 1px solid #c8c7cf;
+  display: none; }
+  .outer-wrapper h2, .outer-wrapper h3, .outer-wrapper p {
     padding: 10px 10px 0 10px;
     margin: 0; }
+  .outer-wrapper .axis path, .outer-wrapper .axis line {
+    fill: none;
+    stroke: #666;
+    shape-rendering: crispEdges; }
+  .outer-wrapper .axis text {
+    font-family: sans-serif;
+    fill: #666;
+    font-size: 13px;
+    shape-rendering: crispEdges; }

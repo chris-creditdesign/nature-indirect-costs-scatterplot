@@ -1,58 +1,63 @@
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-      -ms-border-radius: $radius;
-       -o-border-radius: $radius;
-          border-radius: $radius;
+// Allows number of columns to altered based on screen width
+// ===============================================
+@mixin breakpoint($point) {
+	@if $point == large-screen {
+		@media (min-width: 630px) { @content; }
+	}
+	@else if $point == med-screen {
+		@media (max-width: 629px) { @content; }
+	}
 }
 
-@mixin transition($property, $duration) {
-	-webkit-transition: $property $duration linear;
-	-moz-transition: $property $duration linear;
-	-ms-transition: $property $duration linear;
-	-o-transition: $property $duration linear;
-	transition: $property $duration linear;
+// Handle the side bar disappearing and the content becoming wider 
+// ===============================================
+@mixin awkward-breakpoint($awk-point) {
+	@if $awk-point == vert-buttons {
+		@media (max-width: 901px) { @content; }
+	}
+	@else if $awk-point == horiz-buttons {
+		@media (min-width: 716px) and (max-width: 769px) { @content; }
+	}
 }
 
-@mixin box-sizing() {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-$radius: 5px;
-
-$duration: 250ms;
-
-$font-size: 1.2em;
-$font-family: georgia, serif;
-
-$column-width: 100%;
-$padding: 10px;
-
-$grey: #666;
-
-$colour-1: #1abc9c;
-$colour-2: #27ae60;
-$colour-3: #3498db;
-$colour-4: #5959b7;
-$colour-5: #EB6B4B;
-
+// Warning to be displayed for old IE and no-js 
+// ===============================================
 .status-message {
 	border: 1px solid #c00;
 	background: #fac7c7;
 	padding: 10px;
+	display: none;
+
 }
 
-.outerwrapper {
+.js-disabled .status-message, .ie6 .status-message, .ie7 .status-message, .ie8 .status-message {
+	display: block;
+}
+
+.outer-wrapper {
 	width: 100%;
-	min-height: 900px;
 	position: relative;
 	border: 1px solid #c8c7cf;
+	display: none;
 
 	h2,h3,p {
 		padding: 10px 10px 0 10px;
 		margin: 0;
+	}
+
+	.axis{
+		path, line {
+			fill: none;
+			stroke: #666;
+			shape-rendering: crispEdges;
+		}
+
+		text {
+			font-family: sans-serif;
+			fill: #666;
+			font-size: 13px;
+			shape-rendering: crispEdges;
+		} // SVG
 	}
 
 } // outerwrapper

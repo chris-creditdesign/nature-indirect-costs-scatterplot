@@ -1,33 +1,28 @@
 (function() {
 		var init = function($)
 		{
+		/*	Both jQuery and D3 are available so hide the status message and show the graphic */
+		$(".status-message").css("display","none");
+		$(".outer-wrapper").css("display","block");
 
-		/*	==================================================================================== */
-		/*	GLOBAL VARIABLES FOR D3 */
-
-		/*  Colours for the bars */
-		var allBars = ["#1abc9c","#27ae60","#3498db","#5959b7","#EB6B4B"];
-
-		/*	Margin, Width and height */
-		var margin = {top: 15, right: 20, bottom: 20, left: 90};
-		var width = $('.outerwrapper').width()  - margin.left - margin.right;
-		var height = 350 - margin.top - margin.bottom;
-		/*	Global variable to control the length of D3 transitons */
-		var duration = 450;
-
-		/*	==================================================================================== */
-		/*	jQuery ready */
-
-			/*	==================================================================================== */
 			/*	Load D3 */
 			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
+
+				d3.csv("data/costs-basic.csv", function (data) {
+					var params = buildParams();
+
+					var idcGraphic = new BuildWidget("#idc-graphic", params, data);
+
+					idcGraphic.buildGraphic();
+					idcGraphic.buildScales();
+					idcGraphic.buildAxes();
+				});
 
 			}); /* End of d3js getscript call
 
 		/* End of active code */
 		};
-
 
 	setTimeout(function()
 	{

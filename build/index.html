@@ -51,19 +51,37 @@
 .status-message {
   border: 1px solid #c00;
   background: #fac7c7;
-  padding: 10px; }
+  padding: 10px;
+  display: none; }
 
-.outerwrapper {
+.js-disabled .status-message, .ie6 .status-message, .ie7 .status-message, .ie8 .status-message {
+  display: block; }
+
+.outer-wrapper {
   width: 100%;
-  min-height: 900px;
   position: relative;
-  border: 1px solid #c8c7cf; }
-  .outerwrapper h2, .outerwrapper h3, .outerwrapper p {
+  border: 1px solid #c8c7cf;
+  display: none; }
+  .outer-wrapper h2, .outer-wrapper h3, .outer-wrapper p {
     padding: 10px 10px 0 10px;
     margin: 0; }
+  .outer-wrapper .axis path, .outer-wrapper .axis line {
+    fill: none;
+    stroke: #666;
+    shape-rendering: crispEdges; }
+  .outer-wrapper .axis text {
+    font-family: sans-serif;
+    fill: #666;
+    font-size: 13px;
+    shape-rendering: crispEdges; }
 
 </style>
-<div class="outerwrapper">
+<div class="status-message">
+	<p>This interactive graphic requires a modern browser (e.g. Chrome, Safari, Firefox or Internet Explorer 9+) with javascript enabled.</p>
+	<p>The Thomson Reuters top 100 cited papers can be downloaded here: <a href="http://www.nature.com/polopoly_fs/7.21247!/file/WebofSciencetop100.xlsx" title="Download Web of Science Top 100.xls 26K" class="file-icon xls-icon">Web of Science Top 100.xls</a></p>
+</div>
+
+<div class="outer-wrapper" id="idc-graphic">
 	<div class="chart"></div>
 </div>
 <!--[if gt IE 8]><!-->
@@ -117,13 +135,6 @@ function extendObject (myObject) {
 function buildParams () {
 	var params = {};
 
-	var height = 400;
-
-	/*	Reduce height of main graphic for smaller screens */
-	if (jQuery('.section').width() < 480 ) {
-		height = 300;
-	}
-
 	params.colour =  ["#c1272d",   /* 1 */
 							"#2a6755", /* 2 */
 							"#fbb03b", /* 3 */
@@ -137,10 +148,9 @@ function buildParams () {
 						];
 
 	/*	Margin, Width and height */
-	params.margin = {top: 15, right: 30, bottom: 40, left: 80};
-	params.lifeCycleMargin = {top: 10, right: 10, bottom: 20, left: 70};
+	params.margin = {top: 60, right: 60, bottom: 60, left: 60};
 	params.width = jQuery('.section').width()  - params.margin.left - params.margin.right;
-	params.height = height - params.margin.top - params.margin.bottom;
+	params.height = jQuery('.section').width() - params.margin.top - params.margin.bottom;
 	/*	Global variable to control the length of D3 transitons */
 	params.duration = 450;
 	params.delay = 450;
@@ -165,17 +175,58 @@ function BuildWidget (target, params, data) {
 
 
 BuildWidget.prototype.buildScales = function () {
+	
+	this.yScale = d3.scale.linear()
+					.range([this.params.height, 0])
+					.domain([0,100]);
+
+	this.xScale = d3.scale.linear()
+					.range([0, this.params.width])
+					.domain([0,100]);
 
 };
 
 BuildWidget.prototype.buildGraphic = function () {
 	this.svg = d3.select(this.target  + " > .chart").append("svg")
 		.attr("width", this.params.width + this.params.margin.left + this.params.margin.right)
-		.attr("height", this.params.height + this.params.margin.top + this.params.margin.mid + this.params.miniHeight + this.params.margin.bottom);
+		.attr("height", this.params.height + this.params.margin.top + this.params.margin.bottom);
 
 };
 
 BuildWidget.prototype.buildAxes = function () {
+	this.yAxis = d3.svg.axis()
+					.scale(this.yScale)
+					.tickSize(3,3)
+					.orient("left");
+
+	this.xAxis = d3.svg.axis()
+					.scale(this.xScale)
+					.tickSize(3,3)
+					.orient("bottom");
+
+	/* Prepare the y axis */
+	this.svg.append("g")
+		.attr("class", "y axis")
+		.attr("transform", "translate(" + this.params.margin.left + "," + this.params.margin.top + ")")
+		.call(this.yAxis)
+	  .append("g")
+		.attr("class", "axisLabel")
+	  .append("text")
+		.attr("transform", "translate(" + -(this.params.margin.left * 0.5) + "," + (this.params.height / 2) + "), rotate(-90)")
+		.style("text-anchor", "middle")
+		.text("Actual Indirect Cost");
+
+	/*	Prepare the x axis */
+	this.svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height) + ")")
+		.call(this.xAxis)
+	  .append("g")
+		.attr("class","axisLabel")
+	  .append("text")
+		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.6) + ")")
+		.style("text-anchor","middle")
+		.text("Negotiated Indirect Cost");
 
 };
 
@@ -201,33 +252,28 @@ BuildWidget.prototype.buildBrush = function () {
 (function() {
 		var init = function($)
 		{
+		/*	Both jQuery and D3 are available so hide the status message and show the graphic */
+		$(".status-message").css("display","none");
+		$(".outer-wrapper").css("display","block");
 
-		/*	==================================================================================== */
-		/*	GLOBAL VARIABLES FOR D3 */
-
-		/*  Colours for the bars */
-		var allBars = ["#1abc9c","#27ae60","#3498db","#5959b7","#EB6B4B"];
-
-		/*	Margin, Width and height */
-		var margin = {top: 15, right: 20, bottom: 20, left: 90};
-		var width = $('.outerwrapper').width()  - margin.left - margin.right;
-		var height = 350 - margin.top - margin.bottom;
-		/*	Global variable to control the length of D3 transitons */
-		var duration = 450;
-
-		/*	==================================================================================== */
-		/*	jQuery ready */
-
-			/*	==================================================================================== */
 			/*	Load D3 */
 			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
+
+				d3.csv("data/costs-basic.csv", function (data) {
+					var params = buildParams();
+
+					var idcGraphic = new BuildWidget("#idc-graphic", params, data);
+
+					idcGraphic.buildGraphic();
+					idcGraphic.buildScales();
+					idcGraphic.buildAxes();
+				});
 
 			}); /* End of d3js getscript call
 
 		/* End of active code */
 		};
-
 
 	setTimeout(function()
 	{
