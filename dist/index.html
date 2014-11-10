@@ -183,6 +183,18 @@ BuildWidget.prototype.buildScales = function () {
 						.range([2,15])
 						.domain([minValue, maxValue]);
 
+	this.yMiniMapScale = d3.scale.linear()
+						.range([this.params.brushThickness, 0])
+						.domain([0,100]);
+
+	this.yMiniMapInvertScale = d3.scale.linear()
+						.range([this.params.brushThickness, 0])
+						.domain([100,0]);
+
+	this.xMiniMapScale = d3.scale.linear()
+							.range([0, this.params.brushThickness])
+							.domain([0,100]);
+
 };
 
 BuildWidget.prototype.buildGraphic = function () {
@@ -193,27 +205,49 @@ BuildWidget.prototype.buildGraphic = function () {
 	var clip = this.svg.append("defs").append("svg:clipPath")
 					.attr("id", "clip")
 				  .append("svg:rect")
-					.attr("id", "clip-rect")
-					.attr("x", "0")
-					.attr("y", "0")
+					.attr("x", 0)
+					.attr("y", 0)
 					.attr("width", this.params.width)
 					.attr("height", this.params.height);
 
+	var miniClip = this.svg.append("defs").append("svg:clipPath")
+					.attr("id", "mini-clip")
+				  .append("svg:rect")
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("width", this.params.brushThickness)
+					.attr("height", this.params.brushThickness);
+
 
 	this.scatterGroup = this.svg.append("g")
-						.attr("class","scatterGroup")
-						.attr("clip-path", "url(#clip)")
-						.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
+							.attr("class","scatterGroup")
+							.attr("clip-path", "url(#clip)")
+							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
 
 	this.xBrushGroup = this.svg.append("g")
-						.attr("class","xBrushGroup")
-						.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height + this.params.margin.mid)+ ")");
+							.attr("class","xBrushGroup")
+							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height + this.params.margin.mid)+ ")");
 
 	this.yBrushGroup = this.svg.append("g")
-						.attr("class","yBrushGroup")
-						.attr("transform","translate(" + this.params.margin.left + "," + this.params.margin.top + ")");
+							.attr("class","yBrushGroup")
+							.attr("transform","translate(" + this.params.margin.left + "," + this.params.margin.top + ")");
 
+	this.miniMapGroup = this.svg.append("g")
+							.attr("class","miniMapGroup")
+							.attr("clip-path", "url(#mini-clip)")
+							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 
+	this.miniMapGroup.append("rect")
+						.attr("x", 0)
+						.attr("y", 0)
+						.attr("width", this.params.brushThickness)
+						.attr("height", this.params.brushThickness)
+						.attr("fill","#eee")
+						.attr("stroke","none");
+
+	this.mapperGroup = this.svg.append("g")
+							.attr("class","miniMapGroup")
+							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 };
 
 BuildWidget.prototype.buildAxes = function () {
@@ -270,6 +304,7 @@ BuildWidget.prototype.buildBrush = function () {
 		self.updateScatterPlot();
 		self.svg.selectAll(".x.axis").call(self.xAxis);
 		self.svg.selectAll(".y.axis").call(self.yAxis);
+		self.updateMiniMap(xBrush.extent(), yBrush.extent());
 
 	};
 
@@ -337,25 +372,25 @@ BuildWidget.prototype.buildBrush = function () {
 
 };
 
-BuildWidget.prototype.enterScatterPlot = function () {
+BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
-	var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
+	// var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
 
-	this.scatterGroup.selectAll("circle")
+	target.selectAll("circle")
 			.data(this.data, function (d) {
 				return d.organization_name;
 			})
 			.enter()
 		  .append("circle")
 			.attr("cx", function (d) {
-				return self.xScale(d.FY13);
+				return main ? self.xScale(d.FY13) : self.xMiniMapScale(d.FY13);
 			})
 			.attr("cy", function (d) {
-				return self.yScale(d.calculated_indirect_cost);
+				return main ? self.yScale(d.calculated_indirect_cost) : self.yMiniMapScale(d.calculated_indirect_cost);
 			})
 			.attr("r", function (d) {
-				return self.radiusScale(d.funding);
+				return main ? self.radiusScale(d.funding) : 0.5;
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
@@ -370,20 +405,20 @@ BuildWidget.prototype.enterScatterPlot = function () {
 				}
 			});
 
-	d3.select(".scale")
-	  .append("ul")
-		.selectAll("li")
-		.data(typeOfOrg)
-		.enter()
-	  .append("li")
-		.attr("class", "palette")
-		.attr("title", function(d) { return d.key; })
-		.text(function(d) {
-			return d;
-		})
-		.style("border-color", function(d,i) { 
-			return self.params.colour[i];
-		});
+	// d3.select(".scale")
+	//   .append("ul")
+	// 	.selectAll("li")
+	// 	.data(typeOfOrg)
+	// 	.enter()
+	//   .append("li")
+	// 	.attr("class", "palette")
+	// 	.attr("title", function(d) { return d.key; })
+	// 	.text(function(d) {
+	// 		return d;
+	// 	})
+	// 	.style("border-color", function(d,i) { 
+	// 		return self.params.colour[i];
+	// 	});
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {
@@ -399,6 +434,38 @@ BuildWidget.prototype.updateScatterPlot = function () {
 
 };
 
+BuildWidget.prototype.buildMiniMap = function () {
+	this.mapper = this.mapperGroup.append("rect")
+						.attr("x", 0)
+						.attr("y", 0)
+						.attr("width", this.params.brushThickness)
+						.attr("height", this.params.brushThickness)
+						.attr("fill","none")
+						.attr("stroke","#333")
+						.attr("storke-width","1px");
+};
+
+BuildWidget.prototype.updateMiniMap = function(x, y) {
+	var self = this;
+
+	this.mapper
+			.attr("x", function() {
+				return self.xMiniMapScale(x[0]);
+			})
+			.attr("y", function() {
+				var top = 100 - y[1]
+				return self.yMiniMapInvertScale(top);
+			})
+			.attr("width", function () {
+				var width = x[1] - x[0];
+				return self.xMiniMapScale(width);
+			})
+			.attr("height", function () {
+				var height = y[1] - y[0];
+				return self.yMiniMapInvertScale(height);
+			});
+
+};
 (function() {
 		var init = function($)
 		{
@@ -421,7 +488,9 @@ BuildWidget.prototype.updateScatterPlot = function () {
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
 					idcGraphic.buildBrush();
-					idcGraphic.enterScatterPlot();
+					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
+					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
+					idcGraphic.buildMiniMap();
 				});
 
 			}); /* End of d3js getscript call

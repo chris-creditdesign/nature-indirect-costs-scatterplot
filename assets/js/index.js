@@ -20,7 +20,9 @@
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
 					idcGraphic.buildBrush();
-					idcGraphic.enterScatterPlot();
+					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
+					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
+					idcGraphic.buildMiniMap();
 				});
 
 			}); /* End of d3js getscript call

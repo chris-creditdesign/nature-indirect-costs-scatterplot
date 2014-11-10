@@ -5,6 +5,7 @@ BuildWidget.prototype.buildBrush = function () {
 		self.updateScatterPlot();
 		self.svg.selectAll(".x.axis").call(self.xAxis);
 		self.svg.selectAll(".y.axis").call(self.yAxis);
+		self.updateMiniMap(xBrush.extent(), yBrush.extent());
 
 	};
 

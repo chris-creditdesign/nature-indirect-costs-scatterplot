@@ -1,22 +1,22 @@
-BuildWidget.prototype.enterScatterPlot = function () {
+BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
-	var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
+	// var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
 
-	this.scatterGroup.selectAll("circle")
+	target.selectAll("circle")
 			.data(this.data, function (d) {
 				return d.organization_name;
 			})
 			.enter()
 		  .append("circle")
 			.attr("cx", function (d) {
-				return self.xScale(d.FY13);
+				return main ? self.xScale(d.FY13) : self.xMiniMapScale(d.FY13);
 			})
 			.attr("cy", function (d) {
-				return self.yScale(d.calculated_indirect_cost);
+				return main ? self.yScale(d.calculated_indirect_cost) : self.yMiniMapScale(d.calculated_indirect_cost);
 			})
 			.attr("r", function (d) {
-				return self.radiusScale(d.funding);
+				return main ? self.radiusScale(d.funding) : 0.5;
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
@@ -31,20 +31,20 @@ BuildWidget.prototype.enterScatterPlot = function () {
 				}
 			});
 
-	d3.select(".scale")
-	  .append("ul")
-		.selectAll("li")
-		.data(typeOfOrg)
-		.enter()
-	  .append("li")
-		.attr("class", "palette")
-		.attr("title", function(d) { return d.key; })
-		.text(function(d) {
-			return d;
-		})
-		.style("border-color", function(d,i) { 
-			return self.params.colour[i];
-		});
+	// d3.select(".scale")
+	//   .append("ul")
+	// 	.selectAll("li")
+	// 	.data(typeOfOrg)
+	// 	.enter()
+	//   .append("li")
+	// 	.attr("class", "palette")
+	// 	.attr("title", function(d) { return d.key; })
+	// 	.text(function(d) {
+	// 		return d;
+	// 	})
+	// 	.style("border-color", function(d,i) { 
+	// 		return self.params.colour[i];
+	// 	});
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {

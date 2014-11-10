@@ -28,4 +28,16 @@ BuildWidget.prototype.buildScales = function () {
 						.range([2,15])
 						.domain([minValue, maxValue]);
 
+	this.yMiniMapScale = d3.scale.linear()
+						.range([this.params.brushThickness, 0])
+						.domain([0,100]);
+
+	this.yMiniMapInvertScale = d3.scale.linear()
+						.range([this.params.brushThickness, 0])
+						.domain([100,0]);
+
+	this.xMiniMapScale = d3.scale.linear()
+							.range([0, this.params.brushThickness])
+							.domain([0,100]);
+
 };
