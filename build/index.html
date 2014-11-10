@@ -91,7 +91,7 @@
 </style>
 <div class="status-message">
 	<p>This interactive graphic requires a modern browser (e.g. Chrome, Safari, Firefox or Internet Explorer 9+) with javascript enabled.</p>
-	<p>The Thomson Reuters top 100 cited papers can be downloaded here: <a href="http://www.nature.com/polopoly_fs/7.21247!/file/WebofSciencetop100.xlsx" title="Download Web of Science Top 100.xls 26K" class="file-icon xls-icon">Web of Science Top 100.xls</a></p>
+	<p>The TK can be downloaded here: <a href="#" title="#" class="file-icon xls-icon">Web of Science Top 100.xls</a></p>
 </div>
 
 <div class="outer-wrapper" id="idc-graphic">
@@ -180,8 +180,11 @@ function buildData (data) {
 		
 	for (var i = 0; i < data.length; i++) {
 		data[i].FY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
+		data[i].FY12 = isNaN(data[i].FY12) ? 0 : data[i].FY12;
 		
 		data[i].FY13 = data[i].FY13.length > 0 ? parseFloat(data[i].FY13) : 0;
+		data[i].FY13 = isNaN(data[i].FY13) ? 0 : data[i].FY13;
+		
 		data[i].calculated_indirect_cost = parseFloat(data[i].calculated_indirect_cost);
 
 		data[i].direct_cost = parseInt(data[i].direct_cost, 10);
@@ -456,7 +459,7 @@ BuildWidget.prototype.updateScatterPlot = function () {
 			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
 
-				d3.csv("data/costs-basic.csv", function (data) {
+				d3.csv("data/indirect-costs-calculated-BM11-7.csv", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			
