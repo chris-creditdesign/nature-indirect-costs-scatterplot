@@ -1,10 +1,8 @@
 BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
-	// var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
-
 	target.selectAll("circle")
-			.data(this.data, function (d) {
+			.data(this.data.data, function (d) {
 				return d.organization_name;
 			})
 			.enter()
@@ -20,31 +18,8 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
-				if (d.institution_type === "Higher Ed") {
-					return self.params.colour[0];
-				} else if (d.institution_type === "Hosp") {
-					return self.params.colour[1];
-				} else if (d.institution_type === "NP res inst") {
-					return self.params.colour[2];
-				} else {
-					return self.params.colour[3];
-				}
+				return self.typeColourScale(d.institution_type);
 			});
-
-	// d3.select(".scale")
-	//   .append("ul")
-	// 	.selectAll("li")
-	// 	.data(typeOfOrg)
-	// 	.enter()
-	//   .append("li")
-	// 	.attr("class", "palette")
-	// 	.attr("title", function(d) { return d.key; })
-	// 	.text(function(d) {
-	// 		return d;
-	// 	})
-	// 	.style("border-color", function(d,i) { 
-	// 		return self.params.colour[i];
-	// 	});
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {

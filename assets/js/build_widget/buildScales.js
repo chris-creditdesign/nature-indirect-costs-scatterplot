@@ -1,10 +1,10 @@
 BuildWidget.prototype.buildScales = function () {
 	
-	var minValue = d3.min(this.data, function(d) { 
+	var minValue = d3.min(this.data.data, function(d) { 
 		return d.funding; 
 	});
 	
-	var maxValue = d3.max(this.data, function(d) { 
+	var maxValue = d3.max(this.data.data, function(d) { 
 		return d.funding; 
 	});
 
@@ -39,5 +39,15 @@ BuildWidget.prototype.buildScales = function () {
 	this.xMiniMapScale = d3.scale.linear()
 							.range([0, this.params.brushThickness])
 							.domain([0,100]);
+
+
+	console.log(this.data.type);
+	console.log(this.params.colour);
+
+	this.typeColourScale = d3.scale.ordinal()
+							.domain(this.data.type)
+							.range(this.params.colour);
+
+	console.log(this.typeColourScale("Other"));
 
 };

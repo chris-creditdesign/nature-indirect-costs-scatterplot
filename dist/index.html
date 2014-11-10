@@ -31,7 +31,7 @@
     fill: #666;
     font-size: 13px;
     shape-rendering: crispEdges; }
-  .outer-wrapper .scale {
+  .outer-wrapper .key {
     margin-left: 30px; }
   .outer-wrapper .palette {
     border-left: 20px solid;
@@ -50,7 +50,7 @@
 
 	<div class="chart"></div>
 
-	<div class="scale"></div>
+	<div class="key"></div>
 
 </div>
 <!--[if gt IE 8]><!-->
@@ -104,7 +104,7 @@ function extendObject (myObject) {
 function buildParams () {
 	var params = {};
 
-	params.colour =  ["#e41a1c","#377eb8","#a65628","#984ea3"];
+	params.colour =  ["#a65628","#377eb8","#e41a1c","#984ea3"];
 
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
@@ -128,8 +128,14 @@ BuildWidget.prototype.upDateButtons = function () {
 	var self = this;
 };
 function buildData (data) {
+
+	var institutionTypesArray = [];
+	var statesArray = [];
 		
 	for (var i = 0; i < data.length; i++) {
+		institutionTypesArray.push(data[i].institution_type);
+		statesArray.push(data[i].state);
+
 		data[i].FY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
 		data[i].FY12 = isNaN(data[i].FY12) ? 0 : data[i].FY12;
 		
@@ -143,8 +149,15 @@ function buildData (data) {
 		data[i].funding = parseInt(data[i].funding, 10);
 	}
 
+	var institutionTyesSet = d3.set(institutionTypesArray).values();
 
-	return data;
+	var statesSet = d3.set(statesArray).values();
+
+	return {
+		data: data,
+		type: institutionTyesSet,
+		state: statesSet
+	};
 }
 function BuildWidget (target, params, data) {
 	this.target = target;
@@ -155,11 +168,11 @@ function BuildWidget (target, params, data) {
 
 BuildWidget.prototype.buildScales = function () {
 	
-	var minValue = d3.min(this.data, function(d) { 
+	var minValue = d3.min(this.data.data, function(d) { 
 		return d.funding; 
 	});
 	
-	var maxValue = d3.max(this.data, function(d) { 
+	var maxValue = d3.max(this.data.data, function(d) { 
 		return d.funding; 
 	});
 
@@ -194,6 +207,16 @@ BuildWidget.prototype.buildScales = function () {
 	this.xMiniMapScale = d3.scale.linear()
 							.range([0, this.params.brushThickness])
 							.domain([0,100]);
+
+
+	console.log(this.data.type);
+	console.log(this.params.colour);
+
+	this.typeColourScale = d3.scale.ordinal()
+							.domain(this.data.type)
+							.range(this.params.colour);
+
+	console.log(this.typeColourScale("Other"));
 
 };
 
@@ -375,10 +398,8 @@ BuildWidget.prototype.buildBrush = function () {
 BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
-	// var typeOfOrg = ["Higher Ed", "Hosp", "NP res inst", "Other"];
-
 	target.selectAll("circle")
-			.data(this.data, function (d) {
+			.data(this.data.data, function (d) {
 				return d.organization_name;
 			})
 			.enter()
@@ -394,31 +415,8 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
-				if (d.institution_type === "Higher Ed") {
-					return self.params.colour[0];
-				} else if (d.institution_type === "Hosp") {
-					return self.params.colour[1];
-				} else if (d.institution_type === "NP res inst") {
-					return self.params.colour[2];
-				} else {
-					return self.params.colour[3];
-				}
+				return self.typeColourScale(d.institution_type);
 			});
-
-	// d3.select(".scale")
-	//   .append("ul")
-	// 	.selectAll("li")
-	// 	.data(typeOfOrg)
-	// 	.enter()
-	//   .append("li")
-	// 	.attr("class", "palette")
-	// 	.attr("title", function(d) { return d.key; })
-	// 	.text(function(d) {
-	// 		return d;
-	// 	})
-	// 	.style("border-color", function(d,i) { 
-	// 		return self.params.colour[i];
-	// 	});
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {
@@ -466,6 +464,27 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 			});
 
 };
+BuildWidget.prototype.buildKey = function () {
+	var self = this;
+
+	d3.select(".key")
+	  .append("ul")
+		.selectAll("li")
+		.data(self.data.type)
+		.enter()
+	  .append("li")
+		.attr("class", "palette")
+		.attr("title", function(d) { return d.key; })
+		.text(function(d) {
+			return d;
+		})
+		.style("border-color", function(d) {
+			return self.typeColourScale(d)
+		});
+};
+
+
+
 (function() {
 		var init = function($)
 		{
@@ -474,7 +493,7 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
 
 				d3.csv("data/indirect-costs-calculated-BM11-7.csv", function (data) {
@@ -491,6 +510,8 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
+
+					idcGraphic.buildKey();
 				});
 
 			}); /* End of d3js getscript call

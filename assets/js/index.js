@@ -6,7 +6,7 @@
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
 
 				d3.csv("data/indirect-costs-calculated-BM11-7.csv", function (data) {
@@ -23,6 +23,8 @@
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
+
+					idcGraphic.buildKey();
 				});
 
 			}); /* End of d3js getscript call
