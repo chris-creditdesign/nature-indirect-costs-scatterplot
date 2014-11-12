@@ -50,7 +50,9 @@
 
 	<div class="chart"></div>
 
-	<div class="key"></div>
+	<div class="key" id="key"></div>
+
+	<div class="choose-state" id="states"></div>
 
 </div>
 <!--[if gt IE 8]><!-->
@@ -116,7 +118,6 @@ function buildParams () {
 	params.delay = 450;
 
 	return params;
-
 }
 
 BuildWidget.prototype.buttonClick = function() {
@@ -208,15 +209,9 @@ BuildWidget.prototype.buildScales = function () {
 							.range([0, this.params.brushThickness])
 							.domain([0,100]);
 
-
-	console.log(this.data.type);
-	console.log(this.params.colour);
-
 	this.typeColourScale = d3.scale.ordinal()
 							.domain(this.data.type)
 							.range(this.params.colour);
-
-	console.log(this.typeColourScale("Other"));
 
 };
 
@@ -317,7 +312,7 @@ BuildWidget.prototype.buildAxes = function () {
 		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.7) + ")")
 		.style("text-anchor","middle")
 		.text("Negotiated Indirect Cost (%)");
-
+		
 };
 
 BuildWidget.prototype.buildBrush = function () {
@@ -392,7 +387,6 @@ BuildWidget.prototype.buildBrush = function () {
 		.attr("fill", "#999")
 		.attr("width", this.params.brushThickness)
 
-
 };
 
 BuildWidget.prototype.enterScatterPlot = function (target, main) {
@@ -464,10 +458,10 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 			});
 
 };
-BuildWidget.prototype.buildKey = function () {
+BuildWidget.prototype.buildKey = function (target) {
 	var self = this;
 
-	d3.select(".key")
+	d3.select(target)
 	  .append("ul")
 		.selectAll("li")
 		.data(self.data.type)
@@ -484,6 +478,33 @@ BuildWidget.prototype.buildKey = function () {
 };
 
 
+
+BuildWidget.prototype.buildCheckboxes = function (target) {
+	var self = this;
+
+	console.log(self.data.state);
+
+
+
+
+	/* Create checkboxes for each site */
+	d3.select(target)
+		.append("ul")
+		.attr("id","select")
+		.selectAll('li')
+	  .data(self.data.state)
+	  	.enter()
+		.append("li")
+		.html(function (d, i) {
+			var checked = 'checked';
+			
+			var safeName = d.toLowerCase().split(' ').join("_");
+
+			var innerHTML = "<input type='checkbox' id='" + safeName + "' name='select' " + checked + "><label for='" + safeName + "'> " + d + "</label>";
+
+			return innerHTML;
+		});
+};
 
 (function() {
 		var init = function($)
@@ -511,7 +532,8 @@ BuildWidget.prototype.buildKey = function () {
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
 
-					idcGraphic.buildKey();
+					idcGraphic.buildKey("#key");
+					idcGraphic.buildCheckboxes("#states");
 				});
 
 			}); /* End of d3js getscript call

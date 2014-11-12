@@ -13,5 +13,4 @@ function buildParams () {
 	params.delay = 450;
 
 	return params;
-
 }

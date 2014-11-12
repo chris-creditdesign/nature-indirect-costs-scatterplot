@@ -1,7 +1,7 @@
-BuildWidget.prototype.buildKey = function () {
+BuildWidget.prototype.buildKey = function (target) {
 	var self = this;
 
-	d3.select(".key")
+	d3.select(target)
 	  .append("ul")
 		.selectAll("li")
 		.data(self.data.type)

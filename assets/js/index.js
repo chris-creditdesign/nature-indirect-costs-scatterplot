@@ -24,7 +24,8 @@
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
 
-					idcGraphic.buildKey();
+					idcGraphic.buildKey("#key");
+					idcGraphic.buildCheckboxes("#states");
 				});
 
 			}); /* End of d3js getscript call

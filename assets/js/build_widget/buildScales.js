@@ -40,14 +40,8 @@ BuildWidget.prototype.buildScales = function () {
 							.range([0, this.params.brushThickness])
 							.domain([0,100]);
 
-
-	console.log(this.data.type);
-	console.log(this.params.colour);
-
 	this.typeColourScale = d3.scale.ordinal()
 							.domain(this.data.type)
 							.range(this.params.colour);
-
-	console.log(this.typeColourScale("Other"));
 
 };

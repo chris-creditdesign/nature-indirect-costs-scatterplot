@@ -42,5 +42,5 @@ BuildWidget.prototype.buildAxes = function () {
 		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.7) + ")")
 		.style("text-anchor","middle")
 		.text("Negotiated Indirect Cost (%)");
-
+		
 };

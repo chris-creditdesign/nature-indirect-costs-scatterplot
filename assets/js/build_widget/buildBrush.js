@@ -70,5 +70,4 @@ BuildWidget.prototype.buildBrush = function () {
 		.attr("fill", "#999")
 		.attr("width", this.params.brushThickness)
 
-
 };
