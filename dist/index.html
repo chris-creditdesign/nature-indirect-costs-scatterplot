@@ -106,7 +106,11 @@ function extendObject (myObject) {
 function buildParams () {
 	var params = {};
 
-	params.colour =  ["#a65628","#377eb8","#e41a1c","#984ea3"];
+	params.colour =  [	"#88be3d", /* Higher Ed */
+						"#01a4c6", /* Hosp */
+						"#e9bb09", /* NP res inst */
+						"#ab2715"  /* Other */
+					];
 
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
@@ -135,13 +139,17 @@ function ifNaNmakeZero (num) {
 	return num;
 }
 
+
 function buildData (data) {
 
 	var institutionTypesArray = [];
 	var statesArray = [];
-		
+	var filteredData = [];
+	var statesSet;
+	var institutionTyesSet;
+	
+
 	for (var i = 0; i < data.length; i++) {
-		institutionTypesArray.push(data[i].institution_type);
 		statesArray.push(data[i].state);
 
 		data[i].floatFY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
@@ -163,12 +171,24 @@ function buildData (data) {
 		data[i].intFunding = ifNaNmakeZero(data[i].intFunding);
 	}
 
-	var institutionTyesSet = d3.set(institutionTypesArray).values();
+	statesSet = d3.set(statesArray).values();
 
-	var statesSet = d3.set(statesArray).values();
+	data.forEach(function (element, array, index) {
+		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
+			filteredData.push(element);
+		}
+	});
+
+	for (var j = 0; j < filteredData.length; j++) {
+		console.log(filteredData[j].institution_type);
+		institutionTypesArray.push(filteredData[j].institution_type);
+	}
+	
+	institutionTyesSet = d3.set(institutionTypesArray).values();
 
 	return {
 		data: data,
+		filteredData: filteredData,
 		type: institutionTyesSet,
 		state: statesSet
 	};
@@ -182,48 +202,45 @@ function BuildWidget (target, params, data) {
 
 BuildWidget.prototype.buildScales = function () {
 	
-	var minValue = d3.min(this.data.data, function(d) { 
+	var minValue = d3.min(this.data.filteredData, function(d) { 
 		return d.intFunding; 
 	});
 	
-	var maxValue = d3.max(this.data.data, function(d) { 
+	var maxValue = d3.max(this.data.filteredData, function(d) { 
 		return d.intFunding; 
 	});
 
 	this.yScale = d3.scale.linear()
 					.range([this.params.height, 0])
-					.domain([0,100]);
+					.domain([0,105]);
 
 	this.yBrushScale = d3.scale.linear()
 					.range([this.params.height, 0])
-					.domain([0,100]);
+					.domain([0,105]);
 
 	this.xScale = d3.scale.linear()
 					.range([0, this.params.width])
-					.domain([0,100]);
+					.domain([0,105]);
 
 	this.xBrushScale = d3.scale.linear()
 					.range([0, this.params.width])
-					.domain([0,100]);
+					.domain([0,105]);
 
 	this.radiusScale = d3.scale.linear()
 						.range([2,15])
-						.domain([minValue, maxValue]);
-
-	// console.log( minValue );
-	// console.log( maxValue );
+						.domain([1000000, maxValue]);
 
 	this.yMiniMapScale = d3.scale.linear()
 						.range([this.params.brushThickness, 0])
-						.domain([0,100]);
+						.domain([0,105]);
 
 	this.yMiniMapInvertScale = d3.scale.linear()
 						.range([this.params.brushThickness, 0])
-						.domain([100,0]);
+						.domain([105,0]);
 
 	this.xMiniMapScale = d3.scale.linear()
 							.range([0, this.params.brushThickness])
-							.domain([0,100]);
+							.domain([0,105]);
 
 	this.typeColourScale = d3.scale.ordinal()
 							.domain(this.data.type)
@@ -255,7 +272,7 @@ BuildWidget.prototype.buildGraphic = function () {
 
 	this.scatterGroup = this.svg.append("g")
 							.attr("class","scatterGroup")
-							.attr("clip-path", "url(#clip)")
+							// .attr("clip-path", "url(#clip)")
 							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
 
 	this.xBrushGroup = this.svg.append("g")
@@ -409,7 +426,7 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
 	target.selectAll("circle")
-			.data(this.data.data, function (d) {
+			.data(this.data.filteredData, function (d) {
 				return d.organization_name;
 			})
 			.enter()

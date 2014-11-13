@@ -22,7 +22,7 @@ BuildWidget.prototype.buildGraphic = function () {
 
 	this.scatterGroup = this.svg.append("g")
 							.attr("class","scatterGroup")
-							.attr("clip-path", "url(#clip)")
+							// .attr("clip-path", "url(#clip)")
 							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
 
 	this.xBrushGroup = this.svg.append("g")

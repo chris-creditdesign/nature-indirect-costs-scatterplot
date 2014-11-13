@@ -1,10 +1,10 @@
 function buildParams () {
 	var params = {};
 
-	params.colour =  [	"#e9bb09",
-						"#01a4c6",
-						"#88be3d",
-						"#ab2715"
+	params.colour =  [	"#88be3d", /* Higher Ed */
+						"#01a4c6", /* Hosp */
+						"#e9bb09", /* NP res inst */
+						"#ab2715"  /* Other */
 					];
 
 	/*	Margin, Width and height */

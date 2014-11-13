@@ -5,13 +5,17 @@ function ifNaNmakeZero (num) {
 	return num;
 }
 
+
 function buildData (data) {
 
 	var institutionTypesArray = [];
 	var statesArray = [];
-		
+	var filteredData = [];
+	var statesSet;
+	var institutionTyesSet;
+	
+
 	for (var i = 0; i < data.length; i++) {
-		institutionTypesArray.push(data[i].institution_type);
 		statesArray.push(data[i].state);
 
 		data[i].floatFY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
@@ -33,12 +37,24 @@ function buildData (data) {
 		data[i].intFunding = ifNaNmakeZero(data[i].intFunding);
 	}
 
-	var institutionTyesSet = d3.set(institutionTypesArray).values();
+	statesSet = d3.set(statesArray).values();
 
-	var statesSet = d3.set(statesArray).values();
+	data.forEach(function (element, array, index) {
+		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
+			filteredData.push(element);
+		}
+	});
+
+	for (var j = 0; j < filteredData.length; j++) {
+		console.log(filteredData[j].institution_type);
+		institutionTypesArray.push(filteredData[j].institution_type);
+	}
+	
+	institutionTyesSet = d3.set(institutionTypesArray).values();
 
 	return {
 		data: data,
+		filteredData: filteredData,
 		type: institutionTyesSet,
 		state: statesSet
 	};

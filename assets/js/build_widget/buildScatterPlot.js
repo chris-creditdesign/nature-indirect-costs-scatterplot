@@ -2,7 +2,7 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
 	target.selectAll("circle")
-			.data(this.data.data, function (d) {
+			.data(this.data.filteredData, function (d) {
 				return d.organization_name;
 			})
 			.enter()
