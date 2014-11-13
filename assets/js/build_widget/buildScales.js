@@ -8,6 +8,8 @@ BuildWidget.prototype.buildScales = function () {
 		return d.intFunding; 
 	});
 
+	console.log(minValue + " " + maxValue);
+
 	this.yScale = d3.scale.linear()
 					.range([this.params.height, 0])
 					.domain([0,105]);
@@ -24,7 +26,7 @@ BuildWidget.prototype.buildScales = function () {
 					.range([0, this.params.width])
 					.domain([0,105]);
 
-	this.radiusScale = d3.scale.linear()
+	this.radiusScale = d3.scale.sqrt()
 						.range([2,15])
 						.domain([1000000, maxValue]);
 

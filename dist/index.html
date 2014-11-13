@@ -180,7 +180,6 @@ function buildData (data) {
 	});
 
 	for (var j = 0; j < filteredData.length; j++) {
-		console.log(filteredData[j].institution_type);
 		institutionTypesArray.push(filteredData[j].institution_type);
 	}
 	
@@ -210,6 +209,8 @@ BuildWidget.prototype.buildScales = function () {
 		return d.intFunding; 
 	});
 
+	console.log(minValue + " " + maxValue);
+
 	this.yScale = d3.scale.linear()
 					.range([this.params.height, 0])
 					.domain([0,105]);
@@ -226,7 +227,7 @@ BuildWidget.prototype.buildScales = function () {
 					.range([0, this.params.width])
 					.domain([0,105]);
 
-	this.radiusScale = d3.scale.linear()
+	this.radiusScale = d3.scale.sqrt()
 						.range([2,15])
 						.domain([1000000, maxValue]);
 
@@ -274,6 +275,11 @@ BuildWidget.prototype.buildGraphic = function () {
 							.attr("class","scatterGroup")
 							// .attr("clip-path", "url(#clip)")
 							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
+
+	this.radiusGroup = this.svg.append("g")
+							.attr("class","radiusGroup")
+							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
+
 
 	this.xBrushGroup = this.svg.append("g")
 							.attr("class","xBrushGroup")
@@ -491,7 +497,7 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 			});
 
 };
-BuildWidget.prototype.buildKey = function (target) {
+BuildWidget.prototype.buildColourKey = function (target) {
 	var self = this;
 
 	d3.select(target)
@@ -510,6 +516,24 @@ BuildWidget.prototype.buildKey = function (target) {
 		});
 };
 
+BuildWidget.prototype.buildRadiusKey = function (target) {
+	var self = this;
+
+	var keyRange = [100000000, 600000000];
+
+	target.selectAll("circle")
+		.data(keyRange)
+		.enter()
+		.append("circle")
+		.attr("cx", (self.params.height - 20))
+		.attr("cy", (self.params.width - 20))
+		.attr("r", function(d) {
+			return self.radiusScale(d);
+		})
+		.style("stroke", "#999")
+		.style("stroke-width", 1.5)
+		.style("fill", "none");
+};
 
 
 BuildWidget.prototype.buildCheckboxes = function (target) {
@@ -560,7 +584,8 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
 
-					idcGraphic.buildKey("#key");
+					idcGraphic.buildColourKey("#key");
+					idcGraphic.buildRadiusKey(idcGraphic.radiusGroup);
 					// idcGraphic.buildCheckboxes("#states");
 				});
 

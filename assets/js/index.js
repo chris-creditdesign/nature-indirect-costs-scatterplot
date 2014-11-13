@@ -24,7 +24,8 @@
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
 
-					idcGraphic.buildKey("#key");
+					idcGraphic.buildColourKey("#key");
+					idcGraphic.buildRadiusKey(idcGraphic.radiusGroup);
 					// idcGraphic.buildCheckboxes("#states");
 				});
 

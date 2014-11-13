@@ -46,7 +46,6 @@ function buildData (data) {
 	});
 
 	for (var j = 0; j < filteredData.length; j++) {
-		console.log(filteredData[j].institution_type);
 		institutionTypesArray.push(filteredData[j].institution_type);
 	}
 	
