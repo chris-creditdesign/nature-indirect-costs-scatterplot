@@ -9,7 +9,7 @@
 			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
 
-				d3.csv("data/indirect-costs-calculated-BM11-7.csv", function (data) {
+				d3.csv("data/indirect-costs-calculated.csv", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			
@@ -25,7 +25,7 @@
 					idcGraphic.buildMiniMap();
 
 					idcGraphic.buildKey("#key");
-					idcGraphic.buildCheckboxes("#states");
+					// idcGraphic.buildCheckboxes("#states");
 				});
 
 			}); /* End of d3js getscript call

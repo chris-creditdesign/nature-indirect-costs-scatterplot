@@ -128,6 +128,13 @@ BuildWidget.prototype.buttonClick = function() {
 BuildWidget.prototype.upDateButtons = function () {
 	var self = this;
 };
+function ifNaNmakeZero (num) {
+	if (isNaN(num)) {
+		num = 0;
+	}
+	return num;
+}
+
 function buildData (data) {
 
 	var institutionTypesArray = [];
@@ -137,17 +144,23 @@ function buildData (data) {
 		institutionTypesArray.push(data[i].institution_type);
 		statesArray.push(data[i].state);
 
-		data[i].FY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
-		data[i].FY12 = isNaN(data[i].FY12) ? 0 : data[i].FY12;
+		data[i].floatFY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
+		data[i].floatFY12 = ifNaNmakeZero(data[i].floatFY12);
 		
-		data[i].FY13 = data[i].FY13.length > 0 ? parseFloat(data[i].FY13) : 0;
-		data[i].FY13 = isNaN(data[i].FY13) ? 0 : data[i].FY13;
+		data[i].floatFY13 = data[i].FY13.length > 0 ? parseFloat(data[i].FY13) : 0;
+		data[i].floatFY13 = ifNaNmakeZero(data[i].floatFY13);
 		
-		data[i].calculated_indirect_cost = parseFloat(data[i].calculated_indirect_cost);
+		data[i].floatCalculated_indirect_cost = parseFloat(data[i].calculated_indirect_cost);
+		data[i].floatCalculated_indirect_cost = ifNaNmakeZero(data[i].floatCalculated_indirect_cost);
 
-		data[i].direct_cost = parseInt(data[i].direct_cost, 10);
-		data[i].indirect_cost = parseInt(data[i].indirect_cost, 10);
-		data[i].funding = parseInt(data[i].funding, 10);
+		data[i].intDirect_cost = parseInt(data[i].direct_cost, 10);
+		data[i].intDirect_cost = ifNaNmakeZero(data[i].intDirect_cost);
+
+		data[i].intIndirect_cost = parseInt(data[i].indirect_cost, 10);
+		data[i].intIndirect_cost = ifNaNmakeZero(data[i].intIndirect_cost);
+		
+		data[i].intFunding = parseInt(data[i].funding, 10);
+		data[i].intFunding = ifNaNmakeZero(data[i].intFunding);
 	}
 
 	var institutionTyesSet = d3.set(institutionTypesArray).values();
@@ -170,11 +183,11 @@ function BuildWidget (target, params, data) {
 BuildWidget.prototype.buildScales = function () {
 	
 	var minValue = d3.min(this.data.data, function(d) { 
-		return d.funding; 
+		return d.intFunding; 
 	});
 	
 	var maxValue = d3.max(this.data.data, function(d) { 
-		return d.funding; 
+		return d.intFunding; 
 	});
 
 	this.yScale = d3.scale.linear()
@@ -196,6 +209,9 @@ BuildWidget.prototype.buildScales = function () {
 	this.radiusScale = d3.scale.linear()
 						.range([2,15])
 						.domain([minValue, maxValue]);
+
+	// console.log( minValue );
+	// console.log( maxValue );
 
 	this.yMiniMapScale = d3.scale.linear()
 						.range([this.params.brushThickness, 0])
@@ -399,13 +415,13 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.enter()
 		  .append("circle")
 			.attr("cx", function (d) {
-				return main ? self.xScale(d.FY13) : self.xMiniMapScale(d.FY13);
+				return main ? self.xScale(d.floatFY13) : self.xMiniMapScale(d.floatFY13);
 			})
 			.attr("cy", function (d) {
-				return main ? self.yScale(d.calculated_indirect_cost) : self.yMiniMapScale(d.calculated_indirect_cost);
+				return main ? self.yScale(d.floatCalculated_indirect_cost) : self.yMiniMapScale(d.floatCalculated_indirect_cost);
 			})
 			.attr("r", function (d) {
-				return main ? self.radiusScale(d.funding) : 0.5;
+				return main ? self.radiusScale(d.intFunding) : 0.5;
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
@@ -418,10 +434,10 @@ BuildWidget.prototype.updateScatterPlot = function () {
 
 	this.scatterGroup.selectAll("circle")
 			.attr("cx", function (d) {
-				return self.xScale(d.FY13);
+				return self.xScale(d.floatFY13);
 			})
 			.attr("cy", function (d) {
-				return self.yScale(d.calculated_indirect_cost);
+				return self.yScale(d.floatCalculated_indirect_cost);
 			});
 
 };
@@ -482,11 +498,6 @@ BuildWidget.prototype.buildKey = function (target) {
 BuildWidget.prototype.buildCheckboxes = function (target) {
 	var self = this;
 
-	console.log(self.data.state);
-
-
-
-
 	/* Create checkboxes for each site */
 	d3.select(target)
 		.append("ul")
@@ -517,7 +528,7 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
 
-				d3.csv("data/indirect-costs-calculated-BM11-7.csv", function (data) {
+				d3.csv("data/indirect-costs-calculated.csv", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			
@@ -533,7 +544,7 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 					idcGraphic.buildMiniMap();
 
 					idcGraphic.buildKey("#key");
-					idcGraphic.buildCheckboxes("#states");
+					// idcGraphic.buildCheckboxes("#states");
 				});
 
 			}); /* End of d3js getscript call

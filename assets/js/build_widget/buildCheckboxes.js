@@ -1,11 +1,6 @@
 BuildWidget.prototype.buildCheckboxes = function (target) {
 	var self = this;
 
-	console.log(self.data.state);
-
-
-
-
 	/* Create checkboxes for each site */
 	d3.select(target)
 		.append("ul")

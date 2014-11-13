@@ -8,13 +8,13 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.enter()
 		  .append("circle")
 			.attr("cx", function (d) {
-				return main ? self.xScale(d.FY13) : self.xMiniMapScale(d.FY13);
+				return main ? self.xScale(d.floatFY13) : self.xMiniMapScale(d.floatFY13);
 			})
 			.attr("cy", function (d) {
-				return main ? self.yScale(d.calculated_indirect_cost) : self.yMiniMapScale(d.calculated_indirect_cost);
+				return main ? self.yScale(d.floatCalculated_indirect_cost) : self.yMiniMapScale(d.floatCalculated_indirect_cost);
 			})
 			.attr("r", function (d) {
-				return main ? self.radiusScale(d.funding) : 0.5;
+				return main ? self.radiusScale(d.intFunding) : 0.5;
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
@@ -27,10 +27,10 @@ BuildWidget.prototype.updateScatterPlot = function () {
 
 	this.scatterGroup.selectAll("circle")
 			.attr("cx", function (d) {
-				return self.xScale(d.FY13);
+				return self.xScale(d.floatFY13);
 			})
 			.attr("cy", function (d) {
-				return self.yScale(d.calculated_indirect_cost);
+				return self.yScale(d.floatCalculated_indirect_cost);
 			});
 
 };
