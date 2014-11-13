@@ -1,7 +1,11 @@
 function buildParams () {
 	var params = {};
 
-	params.colour =  ["#a65628","#377eb8","#e41a1c","#984ea3"];
+	params.colour =  [	"#e9bb09",
+						"#01a4c6",
+						"#88be3d",
+						"#ab2715"
+					];
 
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
