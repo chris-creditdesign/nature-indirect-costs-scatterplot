@@ -25,15 +25,15 @@ BuildWidget.prototype.buildScales = function () {
 						.domain([1000000, maxValue]);
 
 	this.yMiniMapScale = d3.scale.linear()
-						.range([this.params.brushThickness, 0])
+						.range([this.params.miniMapThickness, 0])
 						.domain(this.params.fullExtent);
 
 	this.yMiniMapInvertScale = d3.scale.linear()
-						.range([this.params.brushThickness, 0])
+						.range([this.params.miniMapThickness, 0])
 						.domain(this.params.fullExtentInvert);
 
 	this.xMiniMapScale = d3.scale.linear()
-							.range([0, this.params.brushThickness])
+							.range([0, this.params.miniMapThickness])
 							.domain(this.params.fullExtent);
 
 	this.typeColourScale = d3.scale.ordinal()

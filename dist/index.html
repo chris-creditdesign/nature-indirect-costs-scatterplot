@@ -115,6 +115,8 @@ function buildParams () {
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
 	params.brushThickness = 30;
+	params.miniMapMargin = 10;
+	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 	params.startExtent = [25,75];
@@ -226,15 +228,15 @@ BuildWidget.prototype.buildScales = function () {
 						.domain([1000000, maxValue]);
 
 	this.yMiniMapScale = d3.scale.linear()
-						.range([this.params.brushThickness, 0])
+						.range([this.params.miniMapThickness, 0])
 						.domain(this.params.fullExtent);
 
 	this.yMiniMapInvertScale = d3.scale.linear()
-						.range([this.params.brushThickness, 0])
+						.range([this.params.miniMapThickness, 0])
 						.domain(this.params.fullExtentInvert);
 
 	this.xMiniMapScale = d3.scale.linear()
-							.range([0, this.params.brushThickness])
+							.range([0, this.params.miniMapThickness])
 							.domain(this.params.fullExtent);
 
 	this.typeColourScale = d3.scale.ordinal()
@@ -261,8 +263,8 @@ BuildWidget.prototype.buildGraphic = function () {
 				  .append("svg:rect")
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("width", this.params.brushThickness)
-					.attr("height", this.params.brushThickness);
+					.attr("width", this.params.miniMapThickness)
+					.attr("height", this.params.miniMapThickness);
 
 
 	this.scatterGroup = this.svg.append("g")
@@ -286,11 +288,11 @@ BuildWidget.prototype.buildGraphic = function () {
 	this.miniMapGroup = this.svg.append("g")
 							.attr("class","miniMapGroup")
 							.attr("clip-path", "url(#mini-clip)")
-							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
+							.attr("transform","translate(" + this.params.miniMapMargin + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 
 	this.mapperGroup = this.svg.append("g")
 							.attr("class","miniMapGroup")
-							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
+							.attr("transform","translate(" + this.params.miniMapMargin + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 };
 
 BuildWidget.prototype.buildAxes = function () {
@@ -440,7 +442,7 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 				return main ? self.yScale(d.floatCalculated_indirect_cost) : self.yMiniMapScale(d.floatCalculated_indirect_cost);
 			})
 			.attr("r", function (d) {
-				return main ? self.radiusScale(d.intFunding) : 0.5;
+				return main ? self.radiusScale(d.intFunding) : 1;
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
@@ -476,8 +478,8 @@ BuildWidget.prototype.buildMiniMap = function () {
 	this.miniMapGroup.append("rect")
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("width", this.params.brushThickness)
-					.attr("height", this.params.brushThickness)
+					.attr("width", this.params.miniMapThickness)
+					.attr("height", this.params.miniMapThickness)
 					.attr("fill","#eee")
 					.attr("stroke","none");
 

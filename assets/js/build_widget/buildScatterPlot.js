@@ -14,7 +14,7 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 				return main ? self.yScale(d.floatCalculated_indirect_cost) : self.yMiniMapScale(d.floatCalculated_indirect_cost);
 			})
 			.attr("r", function (d) {
-				return main ? self.radiusScale(d.intFunding) : 0.5;
+				return main ? self.radiusScale(d.intFunding) : 1;
 			})
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {

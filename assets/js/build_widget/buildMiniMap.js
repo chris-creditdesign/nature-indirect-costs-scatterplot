@@ -4,8 +4,8 @@ BuildWidget.prototype.buildMiniMap = function () {
 	this.miniMapGroup.append("rect")
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("width", this.params.brushThickness)
-					.attr("height", this.params.brushThickness)
+					.attr("width", this.params.miniMapThickness)
+					.attr("height", this.params.miniMapThickness)
 					.attr("fill","#eee")
 					.attr("stroke","none");
 

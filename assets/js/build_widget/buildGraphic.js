@@ -16,8 +16,8 @@ BuildWidget.prototype.buildGraphic = function () {
 				  .append("svg:rect")
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("width", this.params.brushThickness)
-					.attr("height", this.params.brushThickness);
+					.attr("width", this.params.miniMapThickness)
+					.attr("height", this.params.miniMapThickness);
 
 
 	this.scatterGroup = this.svg.append("g")
@@ -41,9 +41,9 @@ BuildWidget.prototype.buildGraphic = function () {
 	this.miniMapGroup = this.svg.append("g")
 							.attr("class","miniMapGroup")
 							.attr("clip-path", "url(#mini-clip)")
-							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
+							.attr("transform","translate(" + this.params.miniMapMargin + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 
 	this.mapperGroup = this.svg.append("g")
 							.attr("class","miniMapGroup")
-							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
+							.attr("transform","translate(" + this.params.miniMapMargin + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 };
