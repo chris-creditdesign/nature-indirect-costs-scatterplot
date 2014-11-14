@@ -22,8 +22,6 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	var keyRange = [1000000,100000000, 600000000];
 
-	console.log(this.params.uiColour.darkGrey);
-
 	target.selectAll("circle")
 		.data(keyRange)
 		.enter()

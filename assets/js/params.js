@@ -17,6 +17,7 @@ function buildParams () {
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
 	params.brushThickness = 30;
+	params.handleWidth = 10;
 	params.miniMapMargin = 10;
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
