@@ -22,6 +22,8 @@
   .outer-wrapper p {
     padding: 10px;
     margin: 0; }
+  .outer-wrapper .chart {
+    position: relative; }
   .outer-wrapper .axis path, .outer-wrapper .axis line {
     fill: none;
     stroke: #666;
@@ -31,6 +33,25 @@
     fill: #666;
     font-size: 13px;
     shape-rendering: crispEdges; }
+  .outer-wrapper .scatterGroup circle {
+    cursor: pointer; }
+  .outer-wrapper .tooltip {
+    position: absolute;
+    width: 120px;
+    height: auto;
+    padding: 6px 10px 6px 15px;
+    color: #ccc;
+    background-color: #333;
+    pointer-events: none;
+    border-radius: 5px;
+    font-size: 0.8em;
+    line-height: 1.4em;
+    opacity: 1;
+    transition: opacity 0.2s; }
+    .outer-wrapper .tooltip p {
+      padding: 0; }
+  .outer-wrapper .hidden {
+    opacity: 0; }
   .outer-wrapper .key {
     margin-left: 30px; }
   .outer-wrapper .palette {
@@ -48,7 +69,11 @@
 <div class="outer-wrapper" id="idc-graphic">
 	<h2>Negotiated Indirect Cost vs Actual Calculated Indirect Cost</h2>
 
-	<div class="chart"></div>
+	<div class="chart">
+		<div class="tooltip hidden" id="tooltip">
+			<p></p>
+		</div>
+	</div>
 
 	<div class="key" id="key"></div>
 
@@ -492,16 +517,9 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
 				return self.typeColourScale(d.institution_type);
-			});
-};
-
-BuildWidget.prototype.clickScatterPlot = function () {
-	var self = this;
-
-	this.scatterGroup.selectAll("circle")
-		.on("click", function (d) {
-			console.log(d.organization_name + " Funding: $" + d.intFunding + " Negotiated indirect cost rate: " + d.floatFY13 + "% Calculated indirect cost rate: " + d.floatCalculated_indirect_cost + "%");
-		});
+			})
+			.attr("stroke", self.params.uiColour.darkGrey)
+			.attr("stroke-width", 0);
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {
@@ -515,6 +533,37 @@ BuildWidget.prototype.updateScatterPlot = function () {
 				return self.yScale(d.floatCalculated_indirect_cost);
 			});
 
+};
+
+BuildWidget.prototype.buildTooltip = function () {
+	var self = this;
+
+	this.scatterGroup.selectAll("circle")
+		.on("mouseover", function (d) {
+			var myCircle = d3.select(this);
+
+			myCircle.attr("stroke-width", 3);
+
+			var tooltipWidth = parseInt(d3.select(".tooltip").style("padding-left"),10) + parseInt(d3.select(".tooltip").style("width"),10) + parseInt(d3.select(".tooltip").style("padding-right"),10);
+
+			var top = (parseFloat(myCircle.attr("cy")) + self.params.margin.top);
+			var left = (parseFloat(myCircle.attr("cx")) + self.params.margin.left + self.params.brushThickness + self.params.margin.mid );
+
+			if ( parseFloat(myCircle.attr("cx")) > (self.params.width / 2) ) {
+				left -= tooltipWidth;
+			}
+
+			d3.select(".tooltip")
+				.style("top",  top + "px")
+				.style("left", left + "px")
+				.classed("hidden", false)
+				.select("p").text(d.organization_name);
+
+		}).on("mouseout", function () {
+			d3.select(this).attr("stroke-width", 0);
+
+			d3.select(".tooltip").classed("hidden", true);
+		});
 };
 
 BuildWidget.prototype.buildMiniMap = function () {
@@ -654,7 +703,7 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 					idcGraphic.buildBrush();
 					idcGraphic.buildMiniMap();
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
-					idcGraphic.clickScatterPlot();
+					idcGraphic.buildTooltip();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 
 					idcGraphic.buildColourKey("#key");

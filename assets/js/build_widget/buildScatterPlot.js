@@ -19,16 +19,9 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
 				return self.typeColourScale(d.institution_type);
-			});
-};
-
-BuildWidget.prototype.clickScatterPlot = function () {
-	var self = this;
-
-	this.scatterGroup.selectAll("circle")
-		.on("click", function (d) {
-			console.log(d.organization_name + " Funding: $" + d.intFunding + " Negotiated indirect cost rate: " + d.floatFY13 + "% Calculated indirect cost rate: " + d.floatCalculated_indirect_cost + "%");
-		});
+			})
+			.attr("stroke", self.params.uiColour.darkGrey)
+			.attr("stroke-width", 0);
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {

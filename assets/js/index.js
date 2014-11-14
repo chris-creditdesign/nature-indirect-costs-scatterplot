@@ -22,7 +22,7 @@
 					idcGraphic.buildBrush();
 					idcGraphic.buildMiniMap();
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
-					idcGraphic.clickScatterPlot();
+					idcGraphic.buildTooltip();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 
 					idcGraphic.buildColourKey("#key");

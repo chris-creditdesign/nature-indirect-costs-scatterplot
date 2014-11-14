@@ -55,6 +55,10 @@
 		margin: 0;
 	}
 
+	.chart {
+		position: relative;
+	}
+
 	.axis{
 		path, line {
 			fill: none;
@@ -68,6 +72,33 @@
 			font-size: 13px;
 			shape-rendering: crispEdges;
 		} // SVG
+	}
+
+	.scatterGroup circle {
+		cursor: pointer;
+	}
+
+	.tooltip {
+		position: absolute;
+		width: 120px;
+		height: auto;
+		padding: 6px 10px 6px 15px;
+		color: #ccc;
+		background-color: #333;
+		pointer-events: none;
+		border-radius:5px;
+		font-size: 0.8em;
+		line-height: 1.4em;
+		opacity: 1;
+		transition: opacity 0.2s;
+
+		p {
+			padding: 0;
+		}
+	}
+
+	.hidden {
+		opacity: 0;
 	}
 
 	.key {

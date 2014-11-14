@@ -21,6 +21,8 @@
   .outer-wrapper p {
     padding: 10px;
     margin: 0; }
+  .outer-wrapper .chart {
+    position: relative; }
   .outer-wrapper .axis path, .outer-wrapper .axis line {
     fill: none;
     stroke: #666;
@@ -30,6 +32,25 @@
     fill: #666;
     font-size: 13px;
     shape-rendering: crispEdges; }
+  .outer-wrapper .scatterGroup circle {
+    cursor: pointer; }
+  .outer-wrapper .tooltip {
+    position: absolute;
+    width: 120px;
+    height: auto;
+    padding: 6px 10px 6px 15px;
+    color: #ccc;
+    background-color: #333;
+    pointer-events: none;
+    border-radius: 5px;
+    font-size: 0.8em;
+    line-height: 1.4em;
+    opacity: 1;
+    transition: opacity 0.2s; }
+    .outer-wrapper .tooltip p {
+      padding: 0; }
+  .outer-wrapper .hidden {
+    opacity: 0; }
   .outer-wrapper .key {
     margin-left: 30px; }
   .outer-wrapper .palette {
