@@ -25,8 +25,14 @@
 					idcGraphic.buildTooltip();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 
-					idcGraphic.buildColourKey("#key");
-					idcGraphic.buildRadiusKey(idcGraphic.radiusGroup);
+					if (idcGraphic.params.width > 350 ) {
+						idcGraphic.buildBox(idcGraphic.keyGroup);
+						idcGraphic.buildColourKey(idcGraphic.keyGroup);
+						idcGraphic.buildRadiusKey(idcGraphic.keyGroup);
+					} else {
+						idcGraphic.buildColourList("#key");
+					}
+
 					// idcGraphic.buildCheckboxes("#states");
 				});
 

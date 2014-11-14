@@ -51,8 +51,6 @@
       padding: 0; }
   .outer-wrapper .hidden {
     opacity: 0; }
-  .outer-wrapper .key {
-    margin-left: 30px; }
   .outer-wrapper .palette {
     border-left: 20px solid;
     padding-left: 4px;

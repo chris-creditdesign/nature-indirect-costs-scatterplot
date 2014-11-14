@@ -25,10 +25,9 @@ BuildWidget.prototype.buildGraphic = function () {
 							.attr("clip-path", "url(#clip)")
 							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
 
-	this.radiusGroup = this.svg.append("g")
-							.attr("class","radiusGroup")
-							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + 10) + ")");
-
+	this.keyGroup = this.svg.append("g")
+							.attr("class","keyGroup")
+							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
 
 	this.xBrushGroup = this.svg.append("g")
 							.attr("class","xBrushGroup")
