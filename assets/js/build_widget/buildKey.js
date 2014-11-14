@@ -15,7 +15,7 @@ BuildWidget.prototype.buildColourKey = function (target) {
 
 	this.colourGroup = target.append("g")
 							.attr("class","colourGroup")
-							.attr("transform","translate(0,20)");
+							.attr("transform","translate(0,25)");
 
 	this.colourGroup.selectAll("text")
 		.data(self.data.type)
@@ -50,7 +50,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	this.radiusGroup = target.append("g")
 						.attr("class","radiusGroup")
-						.attr("transform","translate(0,95)");
+						.attr("transform","translate(0,100)");
 
 
 	this.radiusGroup.selectAll("circle")

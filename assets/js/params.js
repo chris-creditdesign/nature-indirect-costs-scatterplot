@@ -34,5 +34,7 @@ function buildParams () {
 	params.fullExtent = [0,105];
 	params.fullExtentInvert = [105,0];
 
+	params.format = d3.format("0,000");
+
 	return params;
 }

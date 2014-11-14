@@ -86,7 +86,7 @@
     cursor: pointer; }
   .outer-wrapper .tooltip {
     position: absolute;
-    width: 120px;
+    width: 200px;
     height: auto;
     padding: 6px 10px 6px 15px;
     color: #ccc;
@@ -99,6 +99,9 @@
     transition: opacity 0.2s; }
     .outer-wrapper .tooltip p {
       padding: 0; }
+    .outer-wrapper .tooltip span {
+      font-weight: bold;
+      color: #fff; }
   .outer-wrapper .hidden {
     opacity: 0; }
   .outer-wrapper .palette {
@@ -118,7 +121,10 @@
 
 	<div class="chart">
 		<div class="tooltip hidden" id="tooltip">
-			<p></p>
+			<p id="name"></p>
+			<p>Funding: <span id="funding">0</span></p>
+			<p>Negotiated indirect cost: <span id="fy13">0</span></p>
+			<p>Calculated indirect cost: <span id="calculated-indirect-cost">0</span></p>
 		</div>
 	</div>
 
@@ -211,6 +217,8 @@ function buildParams () {
 	params.startExtent = [25,75];
 	params.fullExtent = [0,105];
 	params.fullExtentInvert = [105,0];
+
+	params.format = d3.format("0,000");
 
 	return params;
 }
@@ -609,8 +617,12 @@ BuildWidget.prototype.buildTooltip = function () {
 			d3.select(".tooltip")
 				.style("top",  top + "px")
 				.style("left", left + "px")
-				.classed("hidden", false)
-				.select("p").text(d.organization_name);
+				.classed("hidden", false);
+			
+			d3.select("#name").text(d.organization_name);
+			d3.select("#funding").text("$" + self.params.format(d.funding));
+			d3.select("#fy13").text(d.FY13 + "%");
+			d3.select("#calculated-indirect-cost").text(d.calculated_indirect_cost + "%");
 
 		}).on("mouseout", function () {
 			d3.select(this).attr("stroke-width", 0);
@@ -689,7 +701,7 @@ BuildWidget.prototype.buildColourKey = function (target) {
 
 	this.colourGroup = target.append("g")
 							.attr("class","colourGroup")
-							.attr("transform","translate(0,20)");
+							.attr("transform","translate(0,25)");
 
 	this.colourGroup.selectAll("text")
 		.data(self.data.type)
@@ -724,7 +736,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	this.radiusGroup = target.append("g")
 						.attr("class","radiusGroup")
-						.attr("transform","translate(0,95)");
+						.attr("transform","translate(0,100)");
 
 
 	this.radiusGroup.selectAll("circle")

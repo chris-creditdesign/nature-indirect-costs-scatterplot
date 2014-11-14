@@ -19,8 +19,12 @@ BuildWidget.prototype.buildTooltip = function () {
 			d3.select(".tooltip")
 				.style("top",  top + "px")
 				.style("left", left + "px")
-				.classed("hidden", false)
-				.select("p").text(d.organization_name);
+				.classed("hidden", false);
+			
+			d3.select("#name").text(d.organization_name);
+			d3.select("#funding").text("$" + self.params.format(d.funding));
+			d3.select("#fy13").text(d.FY13 + "%");
+			d3.select("#calculated-indirect-cost").text(d.calculated_indirect_cost + "%");
 
 		}).on("mouseout", function () {
 			d3.select(this).attr("stroke-width", 0);

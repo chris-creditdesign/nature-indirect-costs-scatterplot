@@ -81,7 +81,7 @@
 
 	.tooltip {
 		position: absolute;
-		width: 120px;
+		width: 200px;
 		height: auto;
 		padding: 6px 10px 6px 15px;
 		color: #ccc;
@@ -95,6 +95,11 @@
 
 		p {
 			padding: 0;
+		}
+
+		span {
+			font-weight: bold;
+			color: #fff;
 		}
 	}
 

@@ -36,7 +36,7 @@
     cursor: pointer; }
   .outer-wrapper .tooltip {
     position: absolute;
-    width: 120px;
+    width: 200px;
     height: auto;
     padding: 6px 10px 6px 15px;
     color: #ccc;
@@ -49,6 +49,9 @@
     transition: opacity 0.2s; }
     .outer-wrapper .tooltip p {
       padding: 0; }
+    .outer-wrapper .tooltip span {
+      font-weight: bold;
+      color: #fff; }
   .outer-wrapper .hidden {
     opacity: 0; }
   .outer-wrapper .palette {
