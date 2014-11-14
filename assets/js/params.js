@@ -14,6 +14,13 @@ function buildParams () {
 		darkGrey: "#333"		
 	};
 
+	params.key = {
+		keyRange: [1000000,100000000, 600000000],
+		verticalShift: [20, 40],
+		horizontalShift: 25,
+		keyHead: "Total funding US$ million"
+	};
+
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
 	params.brushThickness = 30;

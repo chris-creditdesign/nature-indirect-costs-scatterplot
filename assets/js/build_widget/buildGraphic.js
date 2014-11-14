@@ -27,7 +27,7 @@ BuildWidget.prototype.buildGraphic = function () {
 
 	this.radiusGroup = this.svg.append("g")
 							.attr("class","radiusGroup")
-							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
+							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + 10) + ")");
 
 
 	this.xBrushGroup = this.svg.append("g")

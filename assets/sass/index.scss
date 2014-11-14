@@ -59,20 +59,21 @@
 		position: relative;
 	}
 
-	.axis{
+	.axis {
 		path, line {
 			fill: none;
 			stroke: #666;
 			shape-rendering: crispEdges;
 		}
 
-		text {
-			font-family: sans-serif;
-			fill: #666;
-			font-size: 13px;
-			shape-rendering: crispEdges;
-		} // SVG
 	}
+
+	text {
+		font-family: sans-serif;
+		fill: #666;
+		font-size: 13px;
+		shape-rendering: crispEdges;
+	} 
 
 	.scatterGroup circle {
 		cursor: pointer;
