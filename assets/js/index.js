@@ -20,10 +20,10 @@
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
 					idcGraphic.buildBrush();
+					idcGraphic.buildMiniMap();
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
 					idcGraphic.clickScatterPlot();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
-					idcGraphic.buildMiniMap();
 
 					idcGraphic.buildColourKey("#key");
 					idcGraphic.buildRadiusKey(idcGraphic.radiusGroup);

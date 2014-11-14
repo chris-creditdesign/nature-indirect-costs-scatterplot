@@ -4,8 +4,18 @@ BuildWidget.prototype.buildAxes = function () {
 					.tickSize(3,0)
 					.orient("left");
 
+	this.yBrushAxis = d3.svg.axis()
+					.scale(this.yBrushScale)
+					.tickSize(3,0)
+					.orient("left");
+
 	this.xAxis = d3.svg.axis()
 					.scale(this.xScale)
+					.tickSize(3,0)
+					.orient("bottom");
+
+	this.xBrushAxis = d3.svg.axis()
+					.scale(this.xBrushScale)
 					.tickSize(3,0)
 					.orient("bottom");
 
@@ -18,7 +28,7 @@ BuildWidget.prototype.buildAxes = function () {
 	this.svg.append("g")
 		.attr("class", "y-brush axis")
 		.attr("transform", "translate(" + this.params.margin.left + "," + this.params.margin.top + ")")
-		.call(this.yAxis)	
+		.call(this.yBrushAxis)	
 	  .append("g")
 		.attr("class", "axisLabel")
 	  .append("text")
@@ -35,7 +45,7 @@ BuildWidget.prototype.buildAxes = function () {
 	this.svg.append("g")
 		.attr("class", "x-brush axis")
 		.attr("transform", "translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height + this.params.margin.mid + this.params.brushThickness) + ")")
-		.call(this.xAxis)	
+		.call(this.xBrushAxis)	
 	  .append("g")
 		.attr("class","axisLabel")
 	  .append("text")

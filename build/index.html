@@ -163,12 +163,12 @@ function buildParams () {
 
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
-	params.brushThickness = 60;
+	params.brushThickness = 30;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
-	/*	Global variable to control the length of D3 transitons */
-	params.duration = 450;
-	params.delay = 450;
+	params.startExtent = [25,75];
+	params.fullExtent = [0,105];
+	params.fullExtentInvert = [105,0];
 
 	return params;
 }
@@ -250,29 +250,25 @@ function BuildWidget (target, params, data) {
 
 BuildWidget.prototype.buildScales = function () {
 	
-	var minValue = d3.min(this.data.filteredData, function(d) { 
-		return d.intFunding; 
-	});
-	
 	var maxValue = d3.max(this.data.filteredData, function(d) { 
 		return d.intFunding; 
 	});
 
 	this.yScale = d3.scale.linear()
 					.range([this.params.height, 0])
-					.domain([0,105]);
+					.domain(this.params.startExtent);
 
 	this.yBrushScale = d3.scale.linear()
 					.range([this.params.height, 0])
-					.domain([0,105]);
+					.domain(this.params.fullExtent);
 
 	this.xScale = d3.scale.linear()
 					.range([0, this.params.width])
-					.domain([0,105]);
+					.domain(this.params.startExtent);
 
 	this.xBrushScale = d3.scale.linear()
 					.range([0, this.params.width])
-					.domain([0,105]);
+					.domain(this.params.fullExtent);
 
 	this.radiusScale = d3.scale.sqrt()
 						.range([2,15])
@@ -280,15 +276,15 @@ BuildWidget.prototype.buildScales = function () {
 
 	this.yMiniMapScale = d3.scale.linear()
 						.range([this.params.brushThickness, 0])
-						.domain([0,105]);
+						.domain(this.params.fullExtent);
 
 	this.yMiniMapInvertScale = d3.scale.linear()
 						.range([this.params.brushThickness, 0])
-						.domain([105,0]);
+						.domain(this.params.fullExtentInvert);
 
 	this.xMiniMapScale = d3.scale.linear()
 							.range([0, this.params.brushThickness])
-							.domain([0,105]);
+							.domain(this.params.fullExtent);
 
 	this.typeColourScale = d3.scale.ordinal()
 							.domain(this.data.type)
@@ -320,7 +316,7 @@ BuildWidget.prototype.buildGraphic = function () {
 
 	this.scatterGroup = this.svg.append("g")
 							.attr("class","scatterGroup")
-							// .attr("clip-path", "url(#clip)")
+							.attr("clip-path", "url(#clip)")
 							.attr("transform","translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + this.params.margin.top + ")");
 
 	this.radiusGroup = this.svg.append("g")
@@ -341,14 +337,6 @@ BuildWidget.prototype.buildGraphic = function () {
 							.attr("clip-path", "url(#mini-clip)")
 							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
 
-	this.miniMapGroup.append("rect")
-						.attr("x", 0)
-						.attr("y", 0)
-						.attr("width", this.params.brushThickness)
-						.attr("height", this.params.brushThickness)
-						.attr("fill","#eee")
-						.attr("stroke","none");
-
 	this.mapperGroup = this.svg.append("g")
 							.attr("class","miniMapGroup")
 							.attr("transform","translate(" + this.params.margin.left + "," + (this.params.margin.top + this.params.height + this.params.margin.mid) + ")");
@@ -360,8 +348,18 @@ BuildWidget.prototype.buildAxes = function () {
 					.tickSize(3,0)
 					.orient("left");
 
+	this.yBrushAxis = d3.svg.axis()
+					.scale(this.yBrushScale)
+					.tickSize(3,0)
+					.orient("left");
+
 	this.xAxis = d3.svg.axis()
 					.scale(this.xScale)
+					.tickSize(3,0)
+					.orient("bottom");
+
+	this.xBrushAxis = d3.svg.axis()
+					.scale(this.xBrushScale)
 					.tickSize(3,0)
 					.orient("bottom");
 
@@ -374,7 +372,7 @@ BuildWidget.prototype.buildAxes = function () {
 	this.svg.append("g")
 		.attr("class", "y-brush axis")
 		.attr("transform", "translate(" + this.params.margin.left + "," + this.params.margin.top + ")")
-		.call(this.yAxis)	
+		.call(this.yBrushAxis)	
 	  .append("g")
 		.attr("class", "axisLabel")
 	  .append("text")
@@ -391,7 +389,7 @@ BuildWidget.prototype.buildAxes = function () {
 	this.svg.append("g")
 		.attr("class", "x-brush axis")
 		.attr("transform", "translate(" + (this.params.margin.left + this.params.brushThickness + this.params.margin.mid) + "," + (this.params.margin.top + this.params.height + this.params.margin.mid + this.params.brushThickness) + ")")
-		.call(this.xAxis)	
+		.call(this.xBrushAxis)	
 	  .append("g")
 		.attr("class","axisLabel")
 	  .append("text")
@@ -422,8 +420,8 @@ BuildWidget.prototype.buildBrush = function () {
 
 	var xBrushend = function () {
 		if (xBrush.extent()[0] === xBrush.extent()[1]) {
-			d3.select(this).call(xBrush.extent([0, 100]));
-			self.xScale.domain([0,100]);
+			d3.select(this).call(xBrush.extent(self.params.fullExtent));
+			self.xScale.domain(self.params.fullExtent);
 
 			updateView();
 		}
@@ -440,8 +438,8 @@ BuildWidget.prototype.buildBrush = function () {
 
 	var yBrushend = function () {
 		if (yBrush.extent()[0] === yBrush.extent()[1]) {
-			d3.select(this).call(yBrush.extent([0, 100]));
-			self.yScale.domain([0,100]);
+			d3.select(this).call(yBrush.extent(self.params.fullExtent));
+			self.yScale.domain(self.params.fullExtent);
 
 			updateView();
 		}
@@ -449,13 +447,13 @@ BuildWidget.prototype.buildBrush = function () {
 
 	var xBrush = d3.svg.brush()
 					.x(this.xBrushScale)
-					.extent([0, 100])
+					.extent(this.params.startExtent)
 					.on("brush", xDisplay)
 					.on("brushend", xBrushend);
 
 	var yBrush = d3.svg.brush()
 					.y(this.yBrushScale)
-					.extent([0,100])
+					.extent(this.params.startExtent)
 					.on("brush", yDisplay)
 					.on("brushend", yBrushend)
 
@@ -522,11 +520,32 @@ BuildWidget.prototype.updateScatterPlot = function () {
 };
 
 BuildWidget.prototype.buildMiniMap = function () {
+	var self = this;
+
+	this.miniMapGroup.append("rect")
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("width", this.params.brushThickness)
+					.attr("height", this.params.brushThickness)
+					.attr("fill","#eee")
+					.attr("stroke","none");
+
 	this.mapper = this.mapperGroup.append("rect")
-						.attr("x", 0)
-						.attr("y", 0)
-						.attr("width", this.params.brushThickness)
-						.attr("height", this.params.brushThickness)
+						.attr("x", function () {
+							return self.xMiniMapScale(self.params.startExtent[0])
+						})
+						.attr("y", function () {
+							var top = self.params.fullExtent[1] - self.params.startExtent[1];
+							return self.yMiniMapInvertScale(top);
+						})
+						.attr("width", function () {
+							var width = self.params.startExtent[1] - self.params.startExtent[0];
+							return self.xMiniMapScale(width);
+						})
+						.attr("height", function () {
+							var height = self.params.startExtent[1] - self.params.startExtent[0];
+							return self.yMiniMapInvertScale(height);
+						})
 						.attr("fill","none")
 						.attr("stroke","#333")
 						.attr("storke-width","1px");
@@ -540,7 +559,7 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 				return self.xMiniMapScale(x[0]);
 			})
 			.attr("y", function() {
-				var top = 100 - y[1]
+				var top = self.params.fullExtent[1] - y[1];
 				return self.yMiniMapInvertScale(top);
 			})
 			.attr("width", function () {
@@ -551,8 +570,8 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 				var height = y[1] - y[0];
 				return self.yMiniMapInvertScale(height);
 			});
-
 };
+
 BuildWidget.prototype.buildColourKey = function (target) {
 	var self = this;
 
@@ -636,10 +655,10 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
 					idcGraphic.buildBrush();
+					idcGraphic.buildMiniMap();
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
 					idcGraphic.clickScatterPlot();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
-					idcGraphic.buildMiniMap();
 
 					idcGraphic.buildColourKey("#key");
 					idcGraphic.buildRadiusKey(idcGraphic.radiusGroup);

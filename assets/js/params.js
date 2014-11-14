@@ -9,12 +9,12 @@ function buildParams () {
 
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
-	params.brushThickness = 60;
+	params.brushThickness = 30;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
-	/*	Global variable to control the length of D3 transitons */
-	params.duration = 450;
-	params.delay = 450;
+	params.startExtent = [25,75];
+	params.fullExtent = [0,105];
+	params.fullExtentInvert = [105,0];
 
 	return params;
 }
