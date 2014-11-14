@@ -21,6 +21,7 @@
 					idcGraphic.buildAxes();
 					idcGraphic.buildBrush();
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
+					idcGraphic.clickScatterPlot();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
 

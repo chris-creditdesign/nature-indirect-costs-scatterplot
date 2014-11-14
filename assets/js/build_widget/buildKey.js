@@ -20,7 +20,7 @@ BuildWidget.prototype.buildColourKey = function (target) {
 BuildWidget.prototype.buildRadiusKey = function (target) {
 	var self = this;
 
-	var keyRange = [100000000, 600000000];
+	var keyRange = [1000000,100000000, 600000000];
 
 	target.selectAll("circle")
 		.data(keyRange)

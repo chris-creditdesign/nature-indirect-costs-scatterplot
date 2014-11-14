@@ -22,6 +22,15 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			});
 };
 
+BuildWidget.prototype.clickScatterPlot = function () {
+	var self = this;
+
+	this.scatterGroup.selectAll("circle")
+		.on("click", function (d) {
+			console.log(d.organization_name + " Funding: $" + d.intFunding + " Negotiated indirect cost rate: " + d.floatFY13 + "% Calculated indirect cost rate: " + d.floatCalculated_indirect_cost + "%");
+		});
+};
+
 BuildWidget.prototype.updateScatterPlot = function () {
 	var self = this;
 

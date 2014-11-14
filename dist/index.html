@@ -209,8 +209,6 @@ BuildWidget.prototype.buildScales = function () {
 		return d.intFunding; 
 	});
 
-	console.log(minValue + " " + maxValue);
-
 	this.yScale = d3.scale.linear()
 					.range([this.params.height, 0])
 					.domain([0,105]);
@@ -452,6 +450,15 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			});
 };
 
+BuildWidget.prototype.clickScatterPlot = function () {
+	var self = this;
+
+	this.scatterGroup.selectAll("circle")
+		.on("click", function (d) {
+			console.log(d.organization_name + " Funding: $" + d.intFunding + " Negotiated indirect cost rate: " + d.floatFY13 + "% Calculated indirect cost rate: " + d.floatCalculated_indirect_cost + "%");
+		});
+};
+
 BuildWidget.prototype.updateScatterPlot = function () {
 	var self = this;
 
@@ -519,7 +526,7 @@ BuildWidget.prototype.buildColourKey = function (target) {
 BuildWidget.prototype.buildRadiusKey = function (target) {
 	var self = this;
 
-	var keyRange = [100000000, 600000000];
+	var keyRange = [1000000,100000000, 600000000];
 
 	target.selectAll("circle")
 		.data(keyRange)
@@ -581,6 +588,7 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 					idcGraphic.buildAxes();
 					idcGraphic.buildBrush();
 					idcGraphic.enterScatterPlot(idcGraphic.scatterGroup, true);
+					idcGraphic.clickScatterPlot();
 					idcGraphic.enterScatterPlot(idcGraphic.miniMapGroup, false);
 					idcGraphic.buildMiniMap();
 
