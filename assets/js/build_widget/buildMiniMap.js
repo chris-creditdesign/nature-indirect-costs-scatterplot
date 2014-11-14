@@ -6,7 +6,7 @@ BuildWidget.prototype.buildMiniMap = function () {
 					.attr("y", 0)
 					.attr("width", this.params.miniMapThickness)
 					.attr("height", this.params.miniMapThickness)
-					.attr("fill","#eee")
+					.attr("fill", this.params.uiColour.veryLightGrey)
 					.attr("stroke","none");
 
 	this.mapper = this.mapperGroup.append("rect")
@@ -26,7 +26,7 @@ BuildWidget.prototype.buildMiniMap = function () {
 							return self.yMiniMapInvertScale(height);
 						})
 						.attr("fill","none")
-						.attr("stroke","#333")
+						.attr("stroke", this.params.uiColour.darkGrey)
 						.attr("storke-width","1px");
 };
 

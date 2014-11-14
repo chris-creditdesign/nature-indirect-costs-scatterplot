@@ -3,4 +3,3 @@ function BuildWidget (target, params, data) {
 	this.params = params;
 	this.data = data;
 }
-

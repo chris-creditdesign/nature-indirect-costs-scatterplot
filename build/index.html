@@ -152,6 +152,7 @@ function extendObject (myObject) {
 	};
 
 }
+
 function buildParams () {
 	var params = {};
 
@@ -161,6 +162,13 @@ function buildParams () {
 						"#ab2715"  /* Other */
 					];
 
+	params.uiColour = {
+		veryLightGrey: "#ddd",
+		lightGrey: "#999",
+		grey: "#666",
+		darkGrey: "#333"		
+	};
+
 	/*	Margin, Width and height */
 	params.margin = {top: 20, right: 20, mid: 30, bottom: 50, left: 50};
 	params.brushThickness = 30;
@@ -168,6 +176,7 @@ function buildParams () {
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+	
 	params.startExtent = [25,75];
 	params.fullExtent = [0,105];
 	params.fullExtentInvert = [105,0];
@@ -183,13 +192,13 @@ BuildWidget.prototype.buttonClick = function() {
 BuildWidget.prototype.upDateButtons = function () {
 	var self = this;
 };
+
 function ifNaNmakeZero (num) {
 	if (isNaN(num)) {
 		num = 0;
 	}
 	return num;
 }
-
 
 function buildData (data) {
 
@@ -243,12 +252,12 @@ function buildData (data) {
 		state: statesSet
 	};
 }
+
 function BuildWidget (target, params, data) {
 	this.target = target;
 	this.params = params;
 	this.data = data;
 }
-
 
 BuildWidget.prototype.buildScales = function () {
 	
@@ -463,14 +472,14 @@ BuildWidget.prototype.buildBrush = function () {
 		.attr("class", "brush")
 		.call(xBrush)
 		.selectAll("rect")
-		.attr("fill","#999")
+		.attr("fill",this.params.uiColour.veryLightGrey)
 		.attr("height", this.params.brushThickness );
 
 	this.yBrushGroup.append("g")
 		.attr("class", "brush")
 		.call(yBrush)
 		.selectAll("rect")
-		.attr("fill", "#999")
+		.attr("fill", this.params.uiColour.veryLightGrey)
 		.attr("width", this.params.brushThickness)
 
 };
@@ -529,7 +538,7 @@ BuildWidget.prototype.buildMiniMap = function () {
 					.attr("y", 0)
 					.attr("width", this.params.miniMapThickness)
 					.attr("height", this.params.miniMapThickness)
-					.attr("fill","#eee")
+					.attr("fill", this.params.uiColour.veryLightGrey)
 					.attr("stroke","none");
 
 	this.mapper = this.mapperGroup.append("rect")
@@ -549,7 +558,7 @@ BuildWidget.prototype.buildMiniMap = function () {
 							return self.yMiniMapInvertScale(height);
 						})
 						.attr("fill","none")
-						.attr("stroke","#333")
+						.attr("stroke", this.params.uiColour.darkGrey)
 						.attr("storke-width","1px");
 };
 
@@ -598,6 +607,8 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	var keyRange = [1000000,100000000, 600000000];
 
+	console.log(this.params.uiColour.darkGrey);
+
 	target.selectAll("circle")
 		.data(keyRange)
 		.enter()
@@ -607,11 +618,10 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("r", function(d) {
 			return self.radiusScale(d);
 		})
-		.style("stroke", "#999")
+		.style("stroke", this.params.uiColour.grey)
 		.style("stroke-width", 1.5)
 		.style("fill", "none");
 };
-
 
 BuildWidget.prototype.buildCheckboxes = function (target) {
 	var self = this;

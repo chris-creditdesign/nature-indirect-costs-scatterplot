@@ -60,14 +60,14 @@ BuildWidget.prototype.buildBrush = function () {
 		.attr("class", "brush")
 		.call(xBrush)
 		.selectAll("rect")
-		.attr("fill","#999")
+		.attr("fill",this.params.uiColour.veryLightGrey)
 		.attr("height", this.params.brushThickness );
 
 	this.yBrushGroup.append("g")
 		.attr("class", "brush")
 		.call(yBrush)
 		.selectAll("rect")
-		.attr("fill", "#999")
+		.attr("fill", this.params.uiColour.veryLightGrey)
 		.attr("width", this.params.brushThickness)
 
 };

@@ -22,6 +22,8 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	var keyRange = [1000000,100000000, 600000000];
 
+	console.log(this.params.uiColour.darkGrey);
+
 	target.selectAll("circle")
 		.data(keyRange)
 		.enter()
@@ -31,8 +33,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("r", function(d) {
 			return self.radiusScale(d);
 		})
-		.style("stroke", "#999")
+		.style("stroke", this.params.uiColour.grey)
 		.style("stroke-width", 1.5)
 		.style("fill", "none");
 };
-

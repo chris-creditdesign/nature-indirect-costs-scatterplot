@@ -5,7 +5,6 @@ function ifNaNmakeZero (num) {
 	return num;
 }
 
-
 function buildData (data) {
 
 	var institutionTypesArray = [];
