@@ -29,6 +29,8 @@ function buildParams () {
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+
+	params.duration = 450;
 	
 	params.startExtent = [25,75];
 	params.fullExtent = [0,105];

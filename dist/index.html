@@ -164,6 +164,8 @@ function buildParams () {
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
 	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
 	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+
+	params.duration = 450;
 	
 	params.startExtent = [25,75];
 	params.fullExtent = [0,105];
@@ -523,15 +525,19 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.attr("cy", function (d) {
 				return main ? self.yScale(d.floatCalculated_indirect_cost) : self.yMiniMapScale(d.floatCalculated_indirect_cost);
 			})
-			.attr("r", function (d) {
-				return main ? self.radiusScale(d.intFunding) : 1;
-			})
+			.attr("r", 0)
 			.attr("opacity", 0.8)
 			.attr("fill", function (d) {
 				return self.typeColourScale(d.institution_type);
 			})
 			.attr("stroke", self.params.uiColour.darkGrey)
-			.attr("stroke-width", 0);
+			.attr("stroke-width", 0)
+			.transition()
+			.duration(self.params.duration)
+			.attr("r", function (d) {
+				return main ? self.radiusScale(d.intFunding) : 1;
+			});
+
 };
 
 BuildWidget.prototype.updateScatterPlot = function () {
@@ -551,11 +557,16 @@ BuildWidget.prototype.updateScatterPlot = function () {
 };
 
 BuildWidget.prototype.exitScatterPlot = function () {
+	var self = this;
+
 	this.scatterGroup.selectAll("circle")
 		.data(this.data.activeData, function (d) {
 			return d.organization_name;
 		})
 		.exit()
+		.transition()
+		.duration(self.params.duration)
+		.attr("r", 0)
 		.remove();
 };
 
