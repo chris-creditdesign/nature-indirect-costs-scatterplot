@@ -51,6 +51,8 @@ module.exports = function(grunt){
 						'assets/js/build_widget/buildMiniMap.js',
 						'assets/js/build_widget/buildKey.js',
 						'assets/js/build_widget/buildCheckboxes.js',
+						'assets/js/build_widget/updateData.js',
+						'assets/js/build_widget/updateView.js',
 						'assets/js/index.js',
 						'assets/concat/script-close.txt',
 						'assets/concat/polopoly-footer.html'
@@ -78,6 +80,8 @@ module.exports = function(grunt){
 						'assets/js/build_widget/buildMiniMap.js',
 						'assets/js/build_widget/buildKey.js',
 						'assets/js/build_widget/buildCheckboxes.js',
+						'assets/js/build_widget/updateData.js',
+						'assets/js/build_widget/updateView.js',
 						'assets/js/index.js',
 						'assets/concat/script-close.txt',
 						],

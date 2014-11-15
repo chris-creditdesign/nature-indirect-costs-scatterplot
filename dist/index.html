@@ -81,7 +81,7 @@
 
 	<div class="key" id="key"></div>
 
-	<div class="choose-state" id="states"></div>
+	<form class="choose-state" id="states"></form>
 
 </div>
 <!--[if gt IE 8]><!-->
@@ -195,12 +195,18 @@ function buildData (data) {
 	var institutionTypesArray = [];
 	var statesArray = [];
 	var filteredData = [];
-	var statesSet;
 	var institutionTyesSet;
 	
 
 	for (var i = 0; i < data.length; i++) {
-		statesArray.push(data[i].state);
+
+		var my_state = data[i].state;
+
+		if (statesArray.indexOf(my_state) === -1 ) {
+			statesArray.push(my_state);
+		}
+
+		data[i].stateID = my_state.toLowerCase().split(' ').join("_");
 
 		data[i].floatFY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
 		data[i].floatFY12 = ifNaNmakeZero(data[i].floatFY12);
@@ -221,7 +227,7 @@ function buildData (data) {
 		data[i].intFunding = ifNaNmakeZero(data[i].intFunding);
 	}
 
-	statesSet = d3.set(statesArray).values();
+	statesArray.sort();
 
 	data.forEach(function (element, array, index) {
 		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
@@ -238,8 +244,9 @@ function buildData (data) {
 	return {
 		data: data,
 		filteredData: filteredData,
+		activeData: [],
 		type: institutionTyesSet,
-		state: statesSet
+		state: statesArray
 	};
 }
 
@@ -402,44 +409,37 @@ BuildWidget.prototype.buildAxes = function () {
 BuildWidget.prototype.buildBrush = function () {
 	var self = this;
 
-	var updateView = function () {
-		self.updateScatterPlot();
-		self.svg.selectAll(".x.axis").call(self.xAxis);
-		self.svg.selectAll(".y.axis").call(self.yAxis);
-		self.updateMiniMap(xBrush.extent(), yBrush.extent());
-	};
-
 	var xDisplay = function () {
-		var extent = xBrush.extent();
+		var extent = self.xBrush.extent();
 
 		self.xScale.domain(extent);
 
-		updateView();
+		self.updateView();
 	};
 
 	var xBrushend = function () {
-		if (xBrush.extent()[0] === xBrush.extent()[1]) {
-			d3.select(this).call(xBrush.extent(self.params.fullExtent));
+		if (self.xBrush.extent()[0] === self.xBrush.extent()[1]) {
+			d3.select(this).call(self.xBrush.extent(self.params.fullExtent));
 			self.xScale.domain(self.params.fullExtent);
 
-			updateView();
+			self.updateView();
 		}
 	};
 
 	var yDisplay = function () {
-		var extent = yBrush.extent();
+		var extent = self.yBrush.extent();
 
 		self.yScale.domain(extent);
 
-		updateView();
+		self.updateView();
 	};
 
 	var yBrushend = function () {
-		if (yBrush.extent()[0] === yBrush.extent()[1]) {
-			d3.select(this).call(yBrush.extent(self.params.fullExtent));
+		if (self.yBrush.extent()[0] === self.yBrush.extent()[1]) {
+			d3.select(this).call(self.yBrush.extent(self.params.fullExtent));
 			self.yScale.domain(self.params.fullExtent);
 
-			updateView();
+			self.updateView();
 		}
 	};
 
@@ -477,13 +477,13 @@ BuildWidget.prototype.buildBrush = function () {
 			.attr("stroke-width", 1);
 	};
 
-	var xBrush = d3.svg.brush()
+	this.xBrush = d3.svg.brush()
 					.x(this.xBrushScale)
 					.extent(this.params.startExtent)
 					.on("brush", xDisplay)
 					.on("brushend", xBrushend);
 
-	var yBrush = d3.svg.brush()
+	this.yBrush = d3.svg.brush()
 					.y(this.yBrushScale)
 					.extent(this.params.startExtent)
 					.on("brush", yDisplay)
@@ -491,7 +491,7 @@ BuildWidget.prototype.buildBrush = function () {
 
 	this.xBrushGroup.append("g")
 		.attr("class", "brush")
-		.call(xBrush)
+		.call(this.xBrush)
 		.selectAll("rect")
 		.attr("fill",this.params.uiColour.veryLightGrey)
 		.attr("height", this.params.brushThickness );
@@ -500,7 +500,7 @@ BuildWidget.prototype.buildBrush = function () {
 
 	this.yBrushGroup.append("g")
 		.attr("class", "brush")
-		.call(yBrush)
+		.call(this.yBrush)
 		.selectAll("rect")
 		.attr("fill", this.params.uiColour.veryLightGrey)
 		.attr("width", this.params.brushThickness);
@@ -512,7 +512,7 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
 	target.selectAll("circle")
-			.data(this.data.filteredData, function (d) {
+			.data(this.data.activeData, function (d) {
 				return d.organization_name;
 			})
 			.enter()
@@ -538,6 +538,9 @@ BuildWidget.prototype.updateScatterPlot = function () {
 	var self = this;
 
 	this.scatterGroup.selectAll("circle")
+			.data(this.data.activeData, function (d) {
+				return d.organization_name;
+			})
 			.attr("cx", function (d) {
 				return self.xScale(d.floatFY13);
 			})
@@ -545,6 +548,15 @@ BuildWidget.prototype.updateScatterPlot = function () {
 				return self.yScale(d.floatCalculated_indirect_cost);
 			});
 
+};
+
+BuildWidget.prototype.exitScatterPlot = function () {
+	this.scatterGroup.selectAll("circle")
+		.data(this.data.activeData, function (d) {
+			return d.organization_name;
+		})
+		.exit()
+		.remove();
 };
 
 BuildWidget.prototype.buildTooltip = function () {
@@ -762,14 +774,13 @@ BuildWidget.prototype.buildColourList = function (target) {
 
 
 BuildWidget.prototype.buildCheckboxes = function (target) {
-	var self = this;
+	this.data.state.unshift("ALL");
 
 	/* Create checkboxes for each site */
 	d3.select(target)
 		.append("ul")
-		.attr("id","select")
 		.selectAll('li')
-	  .data(self.data.state)
+	  .data(this.data.state)
 	  	.enter()
 		.append("li")
 		.html(function (d, i) {
@@ -777,12 +788,46 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 			
 			var safeName = d.toLowerCase().split(' ').join("_");
 
-			var innerHTML = "<input type='checkbox' id='" + safeName + "' name='select' " + checked + "><label for='" + safeName + "'> " + d + "</label>";
+			var innerHTML = "<label ><input type='checkbox' value='" + safeName + "' " + checked + "> " + d + "</label>";
 
 			return innerHTML;
 		});
 };
 
+BuildWidget.prototype.updateData = function () {
+	var selectedStates = [];
+
+	var checkboxes = jQuery('.outer-wrapper #states input:checked');
+
+	/* First remove the existing data from the arrays */
+	while (this.data.activeData.length > 0) {
+		this.data.activeData.shift();
+	}
+
+	for (var i = 0; i < checkboxes.length; i++) {
+		selectedStates.push(checkboxes.eq(i).val());
+	};
+
+	for (var i = 0; i < this.data.filteredData.length; i++) {
+		var thisState = this.data.filteredData[i].stateID;
+		
+		if (selectedStates.indexOf(thisState) !== -1) {
+			this.data.activeData.push(this.data.filteredData[i]);
+		}
+	}
+};
+
+BuildWidget.prototype.updateView = function () {
+	this.enterScatterPlot(this.scatterGroup, true);
+	this.updateScatterPlot();
+	this.exitScatterPlot();
+
+	this.svg.selectAll(".x.axis").call(this.xAxis);
+	this.svg.selectAll(".y.axis").call(this.yAxis);
+	this.updateMiniMap(this.xBrush.extent(), this.yBrush.extent());
+
+	this.buildTooltip();
+};
 (function() {
 		var init = function($)
 		{
@@ -792,6 +837,7 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 
 			/*	Load D3 */
 			$.getScript("http://d3js.org/d3.v3.min.js", function() {
+			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
 
 				d3.csv("data/indirect-costs-calculated.csv", function (data) {
@@ -801,6 +847,8 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 
 					var idcGraphic = new BuildWidget("#idc-graphic", params, idcData);
 
+					idcGraphic.buildCheckboxes("#states");
+					idcGraphic.updateData();
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
@@ -818,7 +866,19 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 						idcGraphic.buildColourList("#key");
 					}
 
-					// idcGraphic.buildCheckboxes("#states");
+
+					$('.outer-wrapper #states input').change(function () {
+						var thisProp; 
+
+						if ($(this).val() === "all") {
+
+							thisProp = $(this).prop("checked");
+							$('.outer-wrapper #states input').prop("checked", thisProp);	
+						}
+
+						idcGraphic.updateData();
+						idcGraphic.updateView();
+					});
 				});
 
 			}); /* End of d3js getscript call

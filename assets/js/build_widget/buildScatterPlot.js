@@ -2,7 +2,7 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 	var self = this;
 
 	target.selectAll("circle")
-			.data(this.data.filteredData, function (d) {
+			.data(this.data.activeData, function (d) {
 				return d.organization_name;
 			})
 			.enter()
@@ -28,6 +28,9 @@ BuildWidget.prototype.updateScatterPlot = function () {
 	var self = this;
 
 	this.scatterGroup.selectAll("circle")
+			.data(this.data.activeData, function (d) {
+				return d.organization_name;
+			})
 			.attr("cx", function (d) {
 				return self.xScale(d.floatFY13);
 			})
@@ -35,4 +38,13 @@ BuildWidget.prototype.updateScatterPlot = function () {
 				return self.yScale(d.floatCalculated_indirect_cost);
 			});
 
+};
+
+BuildWidget.prototype.exitScatterPlot = function () {
+	this.scatterGroup.selectAll("circle")
+		.data(this.data.activeData, function (d) {
+			return d.organization_name;
+		})
+		.exit()
+		.remove();
 };

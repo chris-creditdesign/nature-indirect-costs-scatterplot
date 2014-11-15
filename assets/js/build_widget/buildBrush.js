@@ -1,44 +1,37 @@
 BuildWidget.prototype.buildBrush = function () {
 	var self = this;
 
-	var updateView = function () {
-		self.updateScatterPlot();
-		self.svg.selectAll(".x.axis").call(self.xAxis);
-		self.svg.selectAll(".y.axis").call(self.yAxis);
-		self.updateMiniMap(xBrush.extent(), yBrush.extent());
-	};
-
 	var xDisplay = function () {
-		var extent = xBrush.extent();
+		var extent = self.xBrush.extent();
 
 		self.xScale.domain(extent);
 
-		updateView();
+		self.updateView();
 	};
 
 	var xBrushend = function () {
-		if (xBrush.extent()[0] === xBrush.extent()[1]) {
-			d3.select(this).call(xBrush.extent(self.params.fullExtent));
+		if (self.xBrush.extent()[0] === self.xBrush.extent()[1]) {
+			d3.select(this).call(self.xBrush.extent(self.params.fullExtent));
 			self.xScale.domain(self.params.fullExtent);
 
-			updateView();
+			self.updateView();
 		}
 	};
 
 	var yDisplay = function () {
-		var extent = yBrush.extent();
+		var extent = self.yBrush.extent();
 
 		self.yScale.domain(extent);
 
-		updateView();
+		self.updateView();
 	};
 
 	var yBrushend = function () {
-		if (yBrush.extent()[0] === yBrush.extent()[1]) {
-			d3.select(this).call(yBrush.extent(self.params.fullExtent));
+		if (self.yBrush.extent()[0] === self.yBrush.extent()[1]) {
+			d3.select(this).call(self.yBrush.extent(self.params.fullExtent));
 			self.yScale.domain(self.params.fullExtent);
 
-			updateView();
+			self.updateView();
 		}
 	};
 
@@ -76,13 +69,13 @@ BuildWidget.prototype.buildBrush = function () {
 			.attr("stroke-width", 1);
 	};
 
-	var xBrush = d3.svg.brush()
+	this.xBrush = d3.svg.brush()
 					.x(this.xBrushScale)
 					.extent(this.params.startExtent)
 					.on("brush", xDisplay)
 					.on("brushend", xBrushend);
 
-	var yBrush = d3.svg.brush()
+	this.yBrush = d3.svg.brush()
 					.y(this.yBrushScale)
 					.extent(this.params.startExtent)
 					.on("brush", yDisplay)
@@ -90,7 +83,7 @@ BuildWidget.prototype.buildBrush = function () {
 
 	this.xBrushGroup.append("g")
 		.attr("class", "brush")
-		.call(xBrush)
+		.call(this.xBrush)
 		.selectAll("rect")
 		.attr("fill",this.params.uiColour.veryLightGrey)
 		.attr("height", this.params.brushThickness );
@@ -99,7 +92,7 @@ BuildWidget.prototype.buildBrush = function () {
 
 	this.yBrushGroup.append("g")
 		.attr("class", "brush")
-		.call(yBrush)
+		.call(this.yBrush)
 		.selectAll("rect")
 		.attr("fill", this.params.uiColour.veryLightGrey)
 		.attr("width", this.params.brushThickness);

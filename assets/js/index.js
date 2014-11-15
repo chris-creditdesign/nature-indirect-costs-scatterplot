@@ -7,6 +7,7 @@
 
 			/*	Load D3 */
 			$.getScript("http://d3js.org/d3.v3.min.js", function() {
+			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
 
 				d3.csv("data/indirect-costs-calculated.csv", function (data) {
@@ -16,6 +17,8 @@
 
 					var idcGraphic = new BuildWidget("#idc-graphic", params, idcData);
 
+					idcGraphic.buildCheckboxes("#states");
+					idcGraphic.updateData();
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
 					idcGraphic.buildAxes();
@@ -33,7 +36,19 @@
 						idcGraphic.buildColourList("#key");
 					}
 
-					// idcGraphic.buildCheckboxes("#states");
+
+					$('.outer-wrapper #states input').change(function () {
+						var thisProp; 
+
+						if ($(this).val() === "all") {
+
+							thisProp = $(this).prop("checked");
+							$('.outer-wrapper #states input').prop("checked", thisProp);	
+						}
+
+						idcGraphic.updateData();
+						idcGraphic.updateView();
+					});
 				});
 
 			}); /* End of d3js getscript call

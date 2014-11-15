@@ -1,12 +1,11 @@
 BuildWidget.prototype.buildCheckboxes = function (target) {
-	var self = this;
+	this.data.state.unshift("ALL");
 
 	/* Create checkboxes for each site */
 	d3.select(target)
 		.append("ul")
-		.attr("id","select")
 		.selectAll('li')
-	  .data(self.data.state)
+	  .data(this.data.state)
 	  	.enter()
 		.append("li")
 		.html(function (d, i) {
@@ -14,7 +13,7 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 			
 			var safeName = d.toLowerCase().split(' ').join("_");
 
-			var innerHTML = "<input type='checkbox' id='" + safeName + "' name='select' " + checked + "><label for='" + safeName + "'> " + d + "</label>";
+			var innerHTML = "<label ><input type='checkbox' value='" + safeName + "' " + checked + "> " + d + "</label>";
 
 			return innerHTML;
 		});

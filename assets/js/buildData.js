@@ -10,12 +10,18 @@ function buildData (data) {
 	var institutionTypesArray = [];
 	var statesArray = [];
 	var filteredData = [];
-	var statesSet;
 	var institutionTyesSet;
 	
 
 	for (var i = 0; i < data.length; i++) {
-		statesArray.push(data[i].state);
+
+		var my_state = data[i].state;
+
+		if (statesArray.indexOf(my_state) === -1 ) {
+			statesArray.push(my_state);
+		}
+
+		data[i].stateID = my_state.toLowerCase().split(' ').join("_");
 
 		data[i].floatFY12 = data[i].FY12.length > 0 ? parseFloat(data[i].FY12) : 0;
 		data[i].floatFY12 = ifNaNmakeZero(data[i].floatFY12);
@@ -36,7 +42,7 @@ function buildData (data) {
 		data[i].intFunding = ifNaNmakeZero(data[i].intFunding);
 	}
 
-	statesSet = d3.set(statesArray).values();
+	statesArray.sort();
 
 	data.forEach(function (element, array, index) {
 		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
@@ -53,7 +59,8 @@ function buildData (data) {
 	return {
 		data: data,
 		filteredData: filteredData,
+		activeData: [],
 		type: institutionTyesSet,
-		state: statesSet
+		state: statesArray
 	};
 }
