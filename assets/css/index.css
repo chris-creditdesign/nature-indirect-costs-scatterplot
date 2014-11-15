@@ -11,7 +11,8 @@
   width: 100%;
   position: relative;
   border: 1px solid #c8c7cf;
-  display: none; }
+  display: none;
+  margin: 0 0 1.65em; }
   .outer-wrapper h2 {
     padding: 10px 10px 0 10px;
     margin: 0; }
@@ -46,7 +47,8 @@
     font-size: 0.8em;
     line-height: 1.4em;
     opacity: 1;
-    transition: opacity 0.2s; }
+    -webkit-transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease; }
     .outer-wrapper .tooltip p {
       padding: 0; }
     .outer-wrapper .tooltip span {
@@ -59,3 +61,82 @@
     padding-left: 4px;
     display: inline-block;
     margin: 10px; }
+  .outer-wrapper .options {
+    margin: 10px; }
+    .outer-wrapper .options h3 {
+      padding: 10px;
+      background: #666;
+      display: inline-block; }
+    .outer-wrapper .options a {
+      color: #fff;
+      text-decoration: none; }
+    .outer-wrapper .options span {
+      display: inline-block;
+      margin-left: 10px;
+      transition: transform 0.3s ease; }
+  .outer-wrapper .options .choose-state {
+    position: absolute;
+    left: -5000%;
+    height: 0;
+    opacity: 0; }
+  .outer-wrapper .options.open-section .choose-state {
+    position: relative;
+    left: 0;
+    height: auto;
+    opacity: 1; }
+  .outer-wrapper .options h3 a:before {
+    content: "Show ";
+    font-weight: normal; }
+  .outer-wrapper .options.open-section h3 a:before {
+    content: "Hide "; }
+  .outer-wrapper .options span {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  .outer-wrapper .options.open-section span {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg); }
+  .outer-wrapper .choose-state {
+    -webkit-transition: opacity 0.4s ease;
+    transition: opacity 0.4s ease;
+    background-color: #ddd;
+    padding: 10px;
+    overflow: hidden; }
+    @media (min-width: 630px) {
+      .outer-wrapper .choose-state {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3; } }
+    @media (max-width: 629px) {
+      .outer-wrapper .choose-state {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2; } }
+  .outer-wrapper ul {
+    overflow: visible; }
+    .outer-wrapper ul li {
+      list-style: none;
+      padding: 0 0 0 10px;
+      margin: 4px 0px 8px; }
+  .outer-wrapper input[type="checkbox"] {
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    margin-right: 5px;
+    position: relative;
+    width: 20px;
+    background-color: #666;
+    -webkit-appearance: none; }
+  .outer-wrapper input[type="checkbox"]:after {
+    content: "\2713";
+    font-size: 1em;
+    display: inline-block;
+    left: 0.35em;
+    position: relative;
+    top: 0.15em; }
+  .outer-wrapper input[type="checkbox"]:after {
+    color: #666; }
+  .outer-wrapper input[type="checkbox"]:checked:after {
+    color: #fff; }

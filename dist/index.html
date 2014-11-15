@@ -12,7 +12,8 @@
   width: 100%;
   position: relative;
   border: 1px solid #c8c7cf;
-  display: none; }
+  display: none;
+  margin: 0 0 1.65em; }
   .outer-wrapper h2 {
     padding: 10px 10px 0 10px;
     margin: 0; }
@@ -47,7 +48,8 @@
     font-size: 0.8em;
     line-height: 1.4em;
     opacity: 1;
-    transition: opacity 0.2s; }
+    -webkit-transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease; }
     .outer-wrapper .tooltip p {
       padding: 0; }
     .outer-wrapper .tooltip span {
@@ -60,6 +62,85 @@
     padding-left: 4px;
     display: inline-block;
     margin: 10px; }
+  .outer-wrapper .options {
+    margin: 10px; }
+    .outer-wrapper .options h3 {
+      padding: 10px;
+      background: #666;
+      display: inline-block; }
+    .outer-wrapper .options a {
+      color: #fff;
+      text-decoration: none; }
+    .outer-wrapper .options span {
+      display: inline-block;
+      margin-left: 10px;
+      transition: transform 0.3s ease; }
+  .outer-wrapper .options .choose-state {
+    position: absolute;
+    left: -5000%;
+    height: 0;
+    opacity: 0; }
+  .outer-wrapper .options.open-section .choose-state {
+    position: relative;
+    left: 0;
+    height: auto;
+    opacity: 1; }
+  .outer-wrapper .options h3 a:before {
+    content: "Show ";
+    font-weight: normal; }
+  .outer-wrapper .options.open-section h3 a:before {
+    content: "Hide "; }
+  .outer-wrapper .options span {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  .outer-wrapper .options.open-section span {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg); }
+  .outer-wrapper .choose-state {
+    -webkit-transition: opacity 0.4s ease;
+    transition: opacity 0.4s ease;
+    background-color: #ddd;
+    padding: 10px;
+    overflow: hidden; }
+    @media (min-width: 630px) {
+      .outer-wrapper .choose-state {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3; } }
+    @media (max-width: 629px) {
+      .outer-wrapper .choose-state {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2; } }
+  .outer-wrapper ul {
+    overflow: visible; }
+    .outer-wrapper ul li {
+      list-style: none;
+      padding: 0 0 0 10px;
+      margin: 4px 0px 8px; }
+  .outer-wrapper input[type="checkbox"] {
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    margin-right: 5px;
+    position: relative;
+    width: 20px;
+    background-color: #666;
+    -webkit-appearance: none; }
+  .outer-wrapper input[type="checkbox"]:after {
+    content: "\2713";
+    font-size: 1em;
+    display: inline-block;
+    left: 0.35em;
+    position: relative;
+    top: 0.15em; }
+  .outer-wrapper input[type="checkbox"]:after {
+    color: #666; }
+  .outer-wrapper input[type="checkbox"]:checked:after {
+    color: #fff; }
 
 </style>
 <div class="status-message">
@@ -81,9 +162,56 @@
 
 	<div class="key" id="key"></div>
 
-	<form class="choose-state" id="states"></form>
+	<section class="options">
+		<h3>
+			<a href="#">Select by state
+				<span>
+					<svg x="0px" y="0px" width="15px" height="10px">
+						<path d="M0,0 L15,0 7.5,10 Z" fill="#fff"></path>
+					</svg>
+				</span>
+			</a>
+		</h3>
+		<form class="choose-state" id="states"></form>
+	</section>
 
 </div>
+
+<!-- remove all this! -->
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit accusantium debitis autem omnis, necessitatibus quas fugiat porro vero vel iste repellat deleniti dolorem voluptatibus alias minus, ad dicta ut aut?</p>
 <!--[if gt IE 8]><!-->
 <script type="text/javascript">
 function extendObject (myObject) {
@@ -197,16 +325,11 @@ function buildData (data) {
 	var institutionTypesArray = [];
 	var statesArray = [];
 	var filteredData = [];
-	var institutionTyesSet;
 	
 
 	for (var i = 0; i < data.length; i++) {
 
 		var my_state = data[i].state;
-
-		if (statesArray.indexOf(my_state) === -1 ) {
-			statesArray.push(my_state);
-		}
 
 		data[i].stateID = my_state.toLowerCase().split(' ').join("_");
 
@@ -229,8 +352,6 @@ function buildData (data) {
 		data[i].intFunding = ifNaNmakeZero(data[i].intFunding);
 	}
 
-	statesArray.sort();
-
 	data.forEach(function (element, array, index) {
 		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
 			filteredData.push(element);
@@ -238,16 +359,23 @@ function buildData (data) {
 	});
 
 	for (var j = 0; j < filteredData.length; j++) {
-		institutionTypesArray.push(filteredData[j].institution_type);
+
+		if (statesArray.indexOf(filteredData[j].state) === -1 ) {
+			statesArray.push(filteredData[j].state);
+		}
+
+		if (institutionTypesArray.indexOf(filteredData[j].institution_type) === -1 ) {
+			institutionTypesArray.push(filteredData[j].institution_type);
+		}
 	}
-	
-	institutionTyesSet = d3.set(institutionTypesArray).values();
+
+	statesArray.sort();
 
 	return {
 		data: data,
 		filteredData: filteredData,
 		activeData: [],
-		type: institutionTyesSet,
+		type: institutionTypesArray,
 		state: statesArray
 	};
 }
@@ -877,14 +1005,26 @@ BuildWidget.prototype.updateView = function () {
 						idcGraphic.buildColourList("#key");
 					}
 
+					$(".outer-wrapper .options h3 a").click(function (e) {
+						var mySection = $(this).parent().parent("section");
 
-					$('.outer-wrapper #states input').change(function () {
+						if (!mySection.hasClass("open-section")) {
+							mySection.addClass("open-section");	
+						} else {
+							mySection.removeClass("open-section");
+						}
+
+						e.preventDefault();
+						return false;
+					});
+
+					$(".outer-wrapper #states input").change(function () {
 						var thisProp; 
 
 						if ($(this).val() === "all") {
 
 							thisProp = $(this).prop("checked");
-							$('.outer-wrapper #states input').prop("checked", thisProp);	
+							$(".outer-wrapper #states input").prop("checked", thisProp);	
 						}
 
 						idcGraphic.updateData();

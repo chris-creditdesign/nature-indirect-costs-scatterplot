@@ -36,14 +36,26 @@
 						idcGraphic.buildColourList("#key");
 					}
 
+					$(".outer-wrapper .options h3 a").click(function (e) {
+						var mySection = $(this).parent().parent("section");
 
-					$('.outer-wrapper #states input').change(function () {
+						if (!mySection.hasClass("open-section")) {
+							mySection.addClass("open-section");	
+						} else {
+							mySection.removeClass("open-section");
+						}
+
+						e.preventDefault();
+						return false;
+					});
+
+					$(".outer-wrapper #states input").change(function () {
 						var thisProp; 
 
 						if ($(this).val() === "all") {
 
 							thisProp = $(this).prop("checked");
-							$('.outer-wrapper #states input').prop("checked", thisProp);	
+							$(".outer-wrapper #states input").prop("checked", thisProp);	
 						}
 
 						idcGraphic.updateData();
