@@ -819,15 +819,16 @@ BuildWidget.prototype.updateMiniMap = function(x, y) {
 };
 
 BuildWidget.prototype.buildBox = function (target) {
-	target.append("rect")
+	this.keyBox = target.append("rect")
 		.attr("x", 10)
 		.attr("y", 10)
 		.attr("width", 170)
-		.attr("height", 155)
+		.attr("height", 170)
 		.attr("fill", "#fff")
 		.attr("stroke", this.params.uiColour.grey)
 		.attr("stroke-width", 1)
 		.attr("opacity", 0.8);
+
 }
 
 BuildWidget.prototype.buildColourKey = function (target) {
@@ -835,7 +836,8 @@ BuildWidget.prototype.buildColourKey = function (target) {
 
 	this.colourGroup = target.append("g")
 							.attr("class","colourGroup")
-							.attr("transform","translate(0,25)");
+							.attr("transform","translate(0,45)")
+							.attr("opacity", 1)
 
 	this.colourGroup.selectAll("text")
 		.data(self.data.type)
@@ -870,8 +872,8 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	this.radiusGroup = target.append("g")
 						.attr("class","radiusGroup")
-						.attr("transform","translate(0,100)");
-
+						.attr("transform","translate(0,115)")
+						.attr("opacity", 1);
 
 	this.radiusGroup.selectAll("circle")
 		.data(self.params.key.keyRange)
@@ -943,6 +945,157 @@ BuildWidget.prototype.buildColourList = function (target) {
 		});
 };
 
+BuildWidget.prototype.buildButton = function (target) {
+	var self = this;
+
+	var visible = true;
+	var topBar;
+	var	midBar;
+	var bottomBar;
+
+	var topBarPoints = [{x1: 13, y1: 17, x2: 32, y2: 17},
+						{x1: 15, y1: 15, x2: 30, y2: 29}
+						];
+
+	var	bottomBarPoints = [{x1: 13, y1: 27, x2: 32, y2: 27},
+							{x1: 15, y1: 29, x2: 30, y2: 15}
+						];
+
+	function hideKey () {
+		topBar.transition()
+			.duration(self.params.duration/2)
+			.attr("x1", topBarPoints[0].x1)
+			.attr("y1", topBarPoints[0].y1)
+			.attr("x2", topBarPoints[0].x2)
+			.attr("y2", topBarPoints[0].y2)
+			.attr("stroke-width", 2);
+
+		midBar.transition()
+			.duration(self.params.duration/2)
+			.attr("opacity", 1);
+
+		bottomBar.transition()
+			.duration(self.params.duration/2)
+			.attr("x1", bottomBarPoints[0].x1)
+			.attr("y1", bottomBarPoints[0].y1)
+			.attr("x2", bottomBarPoints[0].x2)
+			.attr("y2", bottomBarPoints[0].y2)
+			.attr("stroke-width", 2);
+
+		self.colourGroup
+			.transition()
+			.duration(self.params.duration)
+			.attr("opacity", 0);
+
+		self.radiusGroup
+			.transition()
+			.duration(self.params.duration)
+			.attr("opacity", 0);
+
+		self.keyBox
+			.transition()
+			.delay(self.params.duration/2)
+			.duration(self.params.duration)
+			.attr("width", 25)
+			.attr("height", 25)
+			.each("end", function () {
+				self.colourGroup
+					.attr("display", "none");
+
+				self.radiusGroup
+					.attr("display", "none");
+			});
+	}
+
+	function showKey () {
+		topBar.transition()
+			.duration(self.params.duration/2)
+			.attr("x1", topBarPoints[1].x1)
+			.attr("y1", topBarPoints[1].y1)
+			.attr("x2", topBarPoints[1].x2)
+			.attr("y2", topBarPoints[1].y2)
+			.attr("stroke-width", 4);
+
+		midBar.transition()
+			.duration(self.params.duration/2)
+			.attr("opacity", 0);
+
+		bottomBar.transition()
+			.duration(self.params.duration/2)
+			.attr("x1", bottomBarPoints[1].x1)
+			.attr("y1", bottomBarPoints[1].y1)
+			.attr("x2", bottomBarPoints[1].x2)
+			.attr("y2", bottomBarPoints[1].y2)
+			.attr("stroke-width", 4);
+
+		self.colourGroup
+			.attr("display", "block")
+			.transition()
+			.delay(self.params.duration/2)
+			.duration(self.params.duration)
+			.attr("opacity", 1);
+
+		self.radiusGroup
+			.attr("display", "block")
+			.transition()
+			.delay(self.params.duration/2)
+			.duration(self.params.duration)
+			.attr("opacity", 1);
+
+		self.keyBox
+			.transition()
+			.duration(self.params.duration)
+			.attr("width", 170)
+			.attr("height", 170);
+	}
+	
+	this.keyButton = target.append("rect")
+		.attr("x", 10)
+		.attr("y", 10)
+		.attr("width", 25)
+		.attr("height", 25)
+		.style("fill", this.params.uiColour.grey)
+		.style("stroke-width", 0)
+		.style("stroke", "none")
+		.style("cursor","pointer")
+		.on("mousedown", function () {
+			if ( visible ) {
+				hideKey();
+			} else {
+				showKey();
+			}
+
+			visible = !visible;
+		});
+
+	topBar = target.append("line")
+					.attr("x1", topBarPoints[1].x1)
+					.attr("y1", topBarPoints[1].y1)
+					.attr("x2", topBarPoints[1].x2)
+					.attr("y2", topBarPoints[1].y2)
+					.attr("pointer-events","none")
+					.attr("stroke", self.params.uiColour.veryLightGrey)
+					.attr("stroke-width", 4);
+
+	midBar = target.append("line")
+					.attr("x1", 13)
+					.attr("y1", 22)
+					.attr("x2", 32)
+					.attr("y2", 22)
+					.attr("pointer-events","none")
+					.attr("opacity", 0)
+					.attr("stroke", self.params.uiColour.veryLightGrey)
+					.attr("stroke-width", 2);
+
+	bottomBar = target.append("line")
+					.attr("x1", bottomBarPoints[1].x1)
+					.attr("y1", bottomBarPoints[1].y1)
+					.attr("x2", bottomBarPoints[1].x2)
+					.attr("y2", bottomBarPoints[1].y2)
+					.attr("pointer-events","none")
+					.attr("stroke", self.params.uiColour.veryLightGrey)
+					.attr("stroke-width", 4);
+};
 
 BuildWidget.prototype.buildCheckboxes = function (target) {
 	this.data.state.unshift("ALL");
@@ -1010,10 +1163,11 @@ BuildWidget.prototype.updateView = function () {
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
 
+				// d3.csv("http://www.nature.com/widget_assets_polopoly/v515n7527/indirect-costs-calculated.csv", function (data) {
 				d3.csv("data/indirect-costs-calculated.csv", function (data) {
 					var params = buildParams();
 
@@ -1036,6 +1190,7 @@ BuildWidget.prototype.updateView = function () {
 						idcGraphic.buildBox(idcGraphic.keyGroup);
 						idcGraphic.buildColourKey(idcGraphic.keyGroup);
 						idcGraphic.buildRadiusKey(idcGraphic.keyGroup);
+						idcGraphic.buildButton(idcGraphic.keyGroup);
 					} else {
 						idcGraphic.buildColourList("#key");
 					}
