@@ -316,7 +316,7 @@ function buildParams () {
 	};
 
 	params.key = {
-		keyRange: [1000000,100000000, 600000000],
+		keyRange: [1000000, 100000000, 500000000],
 		verticalShift: [20, 40],
 		horizontalShift: 25,
 		keyHead: "Total funding US$ million"
@@ -438,8 +438,8 @@ BuildWidget.prototype.buildScales = function () {
 					.domain(this.params.fullExtent);
 
 	this.radiusScale = d3.scale.sqrt()
-						.range([2,15])
-						.domain([1000000, maxValue]);
+						.range([0,15])
+						.domain([0, maxValue]);
 
 	this.yMiniMapScale = d3.scale.linear()
 						.range([this.params.miniMapThickness, 0])

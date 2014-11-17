@@ -15,7 +15,7 @@ function buildParams () {
 	};
 
 	params.key = {
-		keyRange: [1000000,100000000, 600000000],
+		keyRange: [1000000, 100000000, 500000000],
 		verticalShift: [20, 40],
 		horizontalShift: 25,
 		keyHead: "Total funding US$ million"
