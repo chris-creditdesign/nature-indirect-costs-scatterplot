@@ -3,6 +3,8 @@ BuildWidget.prototype.updateView = function () {
 	this.updateScatterPlot();
 	this.exitScatterPlot();
 
+	this.hideTooltip();
+
 	this.svg.selectAll(".x.axis").call(this.xAxis);
 	this.svg.selectAll(".y.axis").call(this.yAxis);
 	this.updateMiniMap(this.xBrush.extent(), this.yBrush.extent());

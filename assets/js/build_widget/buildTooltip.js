@@ -28,7 +28,10 @@ BuildWidget.prototype.buildTooltip = function () {
 
 		}).on("mouseout", function () {
 			d3.select(this).attr("stroke-width", 0);
-
-			d3.select(".tooltip").classed("hidden", true);
+			self.hideTooltip();
 		});
+};
+
+BuildWidget.prototype.hideTooltip = function () {
+	d3.select(".tooltip").classed("hidden", true);
 };
