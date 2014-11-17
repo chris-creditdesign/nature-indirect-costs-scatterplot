@@ -8,6 +8,9 @@ module.exports = function(grunt){
 
 		sass: {
 		    build: {
+				options: {                       // Target options
+					style: 'expanded'
+				},
 		        files: {
 		            'assets/css/index.css': 'assets/sass/index.scss'
 		        }
