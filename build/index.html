@@ -129,14 +129,13 @@
 .outer-wrapper .options {
   margin: 10px;
 }
-.outer-wrapper .options h3 {
+.outer-wrapper .options button {
   padding: 10px;
   background: #666;
-  display: inline-block;
-}
-.outer-wrapper .options a {
   color: #fff;
-  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  border: none;
 }
 .outer-wrapper .options span {
   display: inline-block;
@@ -155,11 +154,11 @@
   height: auto;
   opacity: 1;
 }
-.outer-wrapper .options h3 a:before {
+.outer-wrapper .options button:before {
   content: "Show ";
   font-weight: normal;
 }
-.outer-wrapper .options.open-section h3 a:before {
+.outer-wrapper .options.open-section button:before {
   content: "Hide ";
 }
 .outer-wrapper .options span {
@@ -249,15 +248,13 @@
 	<div class="key" id="key"></div>
 
 	<section class="options">
-		<h3>
-			<a href="#">Select by state
-				<span>
-					<svg x="0px" y="0px" width="15px" height="10px">
-						<path d="M0,0 L15,0 7.5,10 Z" fill="#fff"></path>
-					</svg>
-				</span>
-			</a>
-		</h3>
+		<button id="show-hide-state">Select by state
+			<span>
+				<svg x="0px" y="0px" width="15px" height="10px">
+					<path d="M0,0 L15,0 7.5,10 Z" fill="#fff"></path>
+				</svg>
+			</span>
+		</button>
 		<form class="choose-state" id="states"></form>
 	</section>
 
@@ -1145,17 +1142,14 @@ BuildWidget.prototype.updateView = function () {
 						idcGraphic.buildColourList("#key");
 					}
 
-					$(".outer-wrapper .options h3 a").click(function (e) {
-						var mySection = $(this).parent().parent("section");
+					$(".outer-wrapper #show-hide-state").click(function () {
+						var mySection = $(this).parent("section");
 
 						if (!mySection.hasClass("open-section")) {
 							mySection.addClass("open-section");	
 						} else {
 							mySection.removeClass("open-section");
 						}
-
-						e.preventDefault();
-						return false;
 					});
 
 					$(".outer-wrapper #states input").change(function () {

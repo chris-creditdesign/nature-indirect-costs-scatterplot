@@ -79,14 +79,13 @@
 .outer-wrapper .options {
   margin: 10px;
 }
-.outer-wrapper .options h3 {
+.outer-wrapper .options button {
   padding: 10px;
   background: #666;
-  display: inline-block;
-}
-.outer-wrapper .options a {
   color: #fff;
-  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  border: none;
 }
 .outer-wrapper .options span {
   display: inline-block;
@@ -105,11 +104,11 @@
   height: auto;
   opacity: 1;
 }
-.outer-wrapper .options h3 a:before {
+.outer-wrapper .options button:before {
   content: "Show ";
   font-weight: normal;
 }
-.outer-wrapper .options.open-section h3 a:before {
+.outer-wrapper .options.open-section button:before {
   content: "Hide ";
 }
 .outer-wrapper .options span {

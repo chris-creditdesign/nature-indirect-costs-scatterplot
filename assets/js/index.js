@@ -37,17 +37,14 @@
 						idcGraphic.buildColourList("#key");
 					}
 
-					$(".outer-wrapper .options h3 a").click(function (e) {
-						var mySection = $(this).parent().parent("section");
+					$(".outer-wrapper #show-hide-state").click(function () {
+						var mySection = $(this).parent("section");
 
 						if (!mySection.hasClass("open-section")) {
 							mySection.addClass("open-section");	
 						} else {
 							mySection.removeClass("open-section");
 						}
-
-						e.preventDefault();
-						return false;
 					});
 
 					$(".outer-wrapper #states input").change(function () {

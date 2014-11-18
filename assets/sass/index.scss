@@ -119,15 +119,13 @@
 	.options {
 		margin: 10px;
 
-		h3 {
+		button {
 			padding: 10px;
 			background: #666;
-			display: inline-block;
-		}
-
-		a {
 			color: #fff;
-			text-decoration: none;
+			display: inline-block;
+			font-weight: bold;
+			border: none;
 		}
 
 		span {
@@ -153,12 +151,12 @@
 		opacity: 1;
 	}
 
-	.options h3 a:before {
+	.options button:before {
 		content: "Show ";
 		font-weight: normal;
 	}
 
-	.options.open-section h3 a:before {
+	.options.open-section button:before {
 		content: "Hide ";
 	}
 
