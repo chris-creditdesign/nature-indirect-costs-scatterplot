@@ -14,6 +14,14 @@ function buildData (data) {
 
 	for (var i = 0; i < data.length; i++) {
 
+		if (data[i].institution_type === "Higher Ed") {
+			data[i].institution_type = "UNIVERSITIES";
+		} else if (data[i].institution_type === "Hosp") {
+			data[i].institution_type = "HOSPITALS";
+		} else if (data[i].institution_type === "NP res inst") {
+			data[i].institution_type = "NON-PROFITS";
+		}
+
 		var my_state = data[i].state;
 
 		data[i].stateID = my_state.toLowerCase().split(' ').join("_");

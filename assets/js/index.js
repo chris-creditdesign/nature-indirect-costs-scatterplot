@@ -9,7 +9,6 @@
 			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
-
 				// d3.csv("http://www.nature.com/widget_assets_polopoly/v515n7527/indirect-costs-calculated.csv", function (data) {
 				d3.csv("data/indirect-costs-calculated.csv", function (data) {
 					var params = buildParams();

@@ -34,7 +34,7 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + -(this.params.margin.left * 0.6) + "," + (this.params.height / 2) + "), rotate(-90)")
 		.style("text-anchor", "middle")
-		.text("Actual Indirect Cost (%)");
+		.text(this.params.key.yAxisLabel);
 
 	/*	Prepare the x axis */
 	this.svg.append("g")
@@ -51,6 +51,6 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.7) + ")")
 		.style("text-anchor","middle")
-		.text("Negotiated Indirect Cost (%)");
+		.text(this.params.key.xAxisLabel);
 		
 };
