@@ -46,7 +46,7 @@ function buildData (data) {
 	}
 
 	data.forEach(function (element, array, index) {
-		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
+		if (element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
 			filteredData.push(element);
 		}
 	});

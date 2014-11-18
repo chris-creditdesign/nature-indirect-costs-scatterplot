@@ -212,6 +212,31 @@
 </div>
 <!--[if gt IE 8]><!-->
 <script type="text/javascript">
+/* http://bl.ocks.org/mbostock/7555321 */
+function wrap(text, width) {
+	text.each(function() {
+		var text = d3.select(this),
+			words = text.text().split(/\s+/).reverse(),
+			word,
+			line = [],
+			lineNumber = 0,
+			lineHeight = 1.2, // ems
+			x = text.attr("x"),
+			y = text.attr("y"),
+			dy = parseFloat(text.attr("dy")),
+			tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+		while ( (word = words.pop()) !== undefined ) {
+			line.push(word);
+			tspan.text(line.join(" "));
+			if (tspan.node().getComputedTextLength() > width) {
+				line.pop();
+				tspan.text(line.join(" "));
+				line = [word];
+				tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+			}
+		}
+	});
+}
 function buildParams () {
 	var params = {};
 
@@ -230,11 +255,11 @@ function buildParams () {
 
 	params.key = {
 		keyRange: [1000000, 100000000, 500000000],
-		verticalShift: [20, 40],
+		verticalShift: [20, 36, 60],
 		horizontalShift: 25,
 		keyHead: "TOTAL, NIH FUNDING FOR 2013, US$ MILLION",
 		xAxisLabel: "NEGOTIATED RATE, FROM INSTITUTIONS (%)",
-		yAxisLabel: "CALCULATED RATE, FROM NIM REPORTER DATABASE (%)"
+		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)"
 	};
 
 	/*	Margin, Width and height */
@@ -305,7 +330,7 @@ function buildData (data) {
 	}
 
 	data.forEach(function (element, array, index) {
-		if (element.funding > 1000000 && element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
+		if (element.floatFY13 && element.floatCalculated_indirect_cost > 0) {
 			filteredData.push(element);
 		}
 	});
@@ -361,8 +386,9 @@ BuildWidget.prototype.buildScales = function () {
 					.domain(this.params.fullExtent);
 
 	this.radiusScale = d3.scale.sqrt()
-						.range([0,15])
-						.domain([0, maxValue]);
+						.domain([1000000, maxValue])
+						.range([2,15])
+						.clamp(true);
 
 	this.yMiniMapScale = d3.scale.linear()
 						.range([this.params.miniMapThickness, 0])
@@ -745,8 +771,8 @@ BuildWidget.prototype.buildBox = function (target) {
 	this.keyBox = target.append("rect")
 		.attr("x", 10)
 		.attr("y", 10)
-		.attr("width", 170)
-		.attr("height", 170)
+		.attr("width", 175)
+		.attr("height", 200)
 		.attr("fill", "#fff")
 		.attr("stroke", this.params.uiColour.grey)
 		.attr("stroke-width", 1)
@@ -795,7 +821,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	this.radiusGroup = target.append("g")
 						.attr("class","radiusGroup")
-						.attr("transform","translate(0,115)")
+						.attr("transform","translate(0,125)")
 						.attr("opacity", 1);
 
 	this.radiusGroup.selectAll("circle")
@@ -805,7 +831,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("cx", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("cy", self.params.key.verticalShift[0])
+		.attr("cy", self.params.key.verticalShift[1])
 		.attr("r", function(d) {
 			return self.radiusScale(d);
 		})
@@ -820,11 +846,11 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("x1", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("y1", self.params.key.verticalShift[0])
+		.attr("y1", self.params.key.verticalShift[1])
 		.attr("x2", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("y2", self.params.key.verticalShift[1])
+		.attr("y2", self.params.key.verticalShift[2])
 		.attr("stroke", self.params.uiColour.lightGrey)
 		.attr("stroke-width", 1);
 
@@ -835,18 +861,25 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("x", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("y", self.params.key.verticalShift[1])
-		.attr("text-anchor", "middle")
+		.attr("y", self.params.key.verticalShift[2])
+		.attr("text-anchor", "left")
+		.attr("dx", -4)
 		.attr("dy", 13)
-		.text(function (d) {
-			return d / 1000000;
+		.text(function (d, i) {
+			if (i === 0) {
+				return "<=" + (d / 1000000);
+			} else {
+				return d / 1000000;
+			}
 		});
 
 	this.radiusGroup.append("text")
-		.attr("x", self.params.key.horizontalShift)
+		.attr("x", (self.params.key.horizontalShift - 2))
 		.attr("y", 0)
-		.attr("dx", -3)
-		.text(self.params.key.keyHead);
+		.attr("dx", 0)
+		.attr("dy", 0)
+		.text(self.params.key.keyHead)
+		.call(wrap, 150);
 };
 
 BuildWidget.prototype.buildColourList = function (target) {
@@ -954,8 +987,8 @@ BuildWidget.prototype.buildButton = function (target) {
 		self.keyBox
 			.transition()
 			.duration(self.params.duration)
-			.attr("width", 170)
-			.attr("height", 170);
+			.attr("width", 175)
+			.attr("height", 200);
 	}
 	
 	this.keyButton = target.append("rect")

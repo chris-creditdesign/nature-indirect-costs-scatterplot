@@ -16,11 +16,11 @@ function buildParams () {
 
 	params.key = {
 		keyRange: [1000000, 100000000, 500000000],
-		verticalShift: [20, 40],
+		verticalShift: [20, 36, 60],
 		horizontalShift: 25,
 		keyHead: "TOTAL, NIH FUNDING FOR 2013, US$ MILLION",
 		xAxisLabel: "NEGOTIATED RATE, FROM INSTITUTIONS (%)",
-		yAxisLabel: "CALCULATED RATE, FROM NIM REPORTER DATABASE (%)"
+		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)"
 	};
 
 	/*	Margin, Width and height */

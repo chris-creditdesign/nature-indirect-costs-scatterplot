@@ -21,8 +21,9 @@ BuildWidget.prototype.buildScales = function () {
 					.domain(this.params.fullExtent);
 
 	this.radiusScale = d3.scale.sqrt()
-						.range([0,15])
-						.domain([0, maxValue]);
+						.domain([1000000, maxValue])
+						.range([2,15])
+						.clamp(true);
 
 	this.yMiniMapScale = d3.scale.linear()
 						.range([this.params.miniMapThickness, 0])

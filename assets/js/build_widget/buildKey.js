@@ -2,8 +2,8 @@ BuildWidget.prototype.buildBox = function (target) {
 	this.keyBox = target.append("rect")
 		.attr("x", 10)
 		.attr("y", 10)
-		.attr("width", 170)
-		.attr("height", 170)
+		.attr("width", 175)
+		.attr("height", 200)
 		.attr("fill", "#fff")
 		.attr("stroke", this.params.uiColour.grey)
 		.attr("stroke-width", 1)
@@ -52,7 +52,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 
 	this.radiusGroup = target.append("g")
 						.attr("class","radiusGroup")
-						.attr("transform","translate(0,115)")
+						.attr("transform","translate(0,125)")
 						.attr("opacity", 1);
 
 	this.radiusGroup.selectAll("circle")
@@ -62,7 +62,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("cx", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("cy", self.params.key.verticalShift[0])
+		.attr("cy", self.params.key.verticalShift[1])
 		.attr("r", function(d) {
 			return self.radiusScale(d);
 		})
@@ -77,11 +77,11 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("x1", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("y1", self.params.key.verticalShift[0])
+		.attr("y1", self.params.key.verticalShift[1])
 		.attr("x2", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("y2", self.params.key.verticalShift[1])
+		.attr("y2", self.params.key.verticalShift[2])
 		.attr("stroke", self.params.uiColour.lightGrey)
 		.attr("stroke-width", 1);
 
@@ -92,18 +92,25 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("x", function (d,i) {
 			return ++i * self.params.key.horizontalShift;
 		})
-		.attr("y", self.params.key.verticalShift[1])
-		.attr("text-anchor", "middle")
+		.attr("y", self.params.key.verticalShift[2])
+		.attr("text-anchor", "left")
+		.attr("dx", -4)
 		.attr("dy", 13)
-		.text(function (d) {
-			return d / 1000000;
+		.text(function (d, i) {
+			if (i === 0) {
+				return "<=" + (d / 1000000);
+			} else {
+				return d / 1000000;
+			}
 		});
 
 	this.radiusGroup.append("text")
-		.attr("x", self.params.key.horizontalShift)
+		.attr("x", (self.params.key.horizontalShift - 2))
 		.attr("y", 0)
-		.attr("dx", -3)
-		.text(self.params.key.keyHead);
+		.attr("dx", 0)
+		.attr("dy", 0)
+		.text(self.params.key.keyHead)
+		.call(wrap, 150);
 };
 
 BuildWidget.prototype.buildColourList = function (target) {
@@ -211,8 +218,8 @@ BuildWidget.prototype.buildButton = function (target) {
 		self.keyBox
 			.transition()
 			.duration(self.params.duration)
-			.attr("width", 170)
-			.attr("height", 170);
+			.attr("width", 175)
+			.attr("height", 200);
 	}
 	
 	this.keyButton = target.append("rect")
