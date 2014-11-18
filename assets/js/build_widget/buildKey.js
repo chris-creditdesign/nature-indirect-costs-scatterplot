@@ -130,14 +130,13 @@ BuildWidget.prototype.buildButton = function (target) {
 
 	var visible = true;
 	var topBar;
-	var	midBar;
 	var bottomBar;
 
-	var topBarPoints = [{x1: 13, y1: 17, x2: 32, y2: 17},
+	var topBarPoints = [{x1: 23, y1: 15, x2: 23, y2: 29},
 						{x1: 15, y1: 15, x2: 30, y2: 29}
 						];
 
-	var	bottomBarPoints = [{x1: 13, y1: 27, x2: 32, y2: 27},
+	var	bottomBarPoints = [{x1: 15, y1: 22, x2: 30, y2: 22},
 							{x1: 15, y1: 29, x2: 30, y2: 15}
 						];
 
@@ -147,34 +146,28 @@ BuildWidget.prototype.buildButton = function (target) {
 			.attr("x1", topBarPoints[0].x1)
 			.attr("y1", topBarPoints[0].y1)
 			.attr("x2", topBarPoints[0].x2)
-			.attr("y2", topBarPoints[0].y2)
-			.attr("stroke-width", 2);
-
-		midBar.transition()
-			.duration(self.params.duration/2)
-			.attr("opacity", 1);
+			.attr("y2", topBarPoints[0].y2);
 
 		bottomBar.transition()
 			.duration(self.params.duration/2)
 			.attr("x1", bottomBarPoints[0].x1)
 			.attr("y1", bottomBarPoints[0].y1)
 			.attr("x2", bottomBarPoints[0].x2)
-			.attr("y2", bottomBarPoints[0].y2)
-			.attr("stroke-width", 2);
+			.attr("y2", bottomBarPoints[0].y2);
 
 		self.colourGroup
 			.transition()
-			.duration(self.params.duration)
+			.duration(self.params.duration/2)
 			.attr("opacity", 0);
 
 		self.radiusGroup
 			.transition()
-			.duration(self.params.duration)
+			.duration(self.params.duration/2)
 			.attr("opacity", 0);
 
 		self.keyBox
 			.transition()
-			.delay(self.params.duration/2)
+			.delay(self.params.duration/4)
 			.duration(self.params.duration)
 			.attr("width", 25)
 			.attr("height", 25)
@@ -193,21 +186,14 @@ BuildWidget.prototype.buildButton = function (target) {
 			.attr("x1", topBarPoints[1].x1)
 			.attr("y1", topBarPoints[1].y1)
 			.attr("x2", topBarPoints[1].x2)
-			.attr("y2", topBarPoints[1].y2)
-			.attr("stroke-width", 4);
-
-		midBar.transition()
-			.duration(self.params.duration/2)
-			.attr("opacity", 0);
+			.attr("y2", topBarPoints[1].y2);
 
 		bottomBar.transition()
 			.duration(self.params.duration/2)
 			.attr("x1", bottomBarPoints[1].x1)
 			.attr("y1", bottomBarPoints[1].y1)
 			.attr("x2", bottomBarPoints[1].x2)
-			.attr("y2", bottomBarPoints[1].y2)
-			.attr("stroke-width", 4);
-
+			.attr("y2", bottomBarPoints[1].y2);
 		self.colourGroup
 			.attr("display", "block")
 			.transition()
@@ -256,16 +242,6 @@ BuildWidget.prototype.buildButton = function (target) {
 					.attr("pointer-events","none")
 					.attr("stroke", self.params.uiColour.veryLightGrey)
 					.attr("stroke-width", 4);
-
-	midBar = target.append("line")
-					.attr("x1", 13)
-					.attr("y1", 22)
-					.attr("x2", 32)
-					.attr("y2", 22)
-					.attr("pointer-events","none")
-					.attr("opacity", 0)
-					.attr("stroke", self.params.uiColour.veryLightGrey)
-					.attr("stroke-width", 2);
 
 	bottomBar = target.append("line")
 					.attr("x1", bottomBarPoints[1].x1)
