@@ -144,6 +144,7 @@
 }
 .outer-wrapper ul {
   overflow: visible;
+  padding-left: 0px;
 }
 .outer-wrapper ul li {
   list-style: none;
