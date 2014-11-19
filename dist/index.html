@@ -77,6 +77,10 @@
   display: inline-block;
   margin: 10px;
 }
+.outer-wrapper .widget-footnote {
+  font-size: 0.8em;
+  color: #666;
+}
 .outer-wrapper .options {
   margin: 10px;
 }
@@ -211,6 +215,8 @@
 		<form class="choose-state" id="states"></form>
 	</section>
 
+	<p class="widget-footnote" id="widget-footnote"></p>
+
 </div>
 <!--[if gt IE 8]><!-->
 <script type="text/javascript">
@@ -239,6 +245,7 @@ function wrap(text, width) {
 		}
 	});
 }
+
 function buildParams () {
 	var params = {};
 
@@ -261,7 +268,11 @@ function buildParams () {
 		horizontalShift: 25,
 		keyHead: "TOTAL, NIH FUNDING FOR 2013, US$ MILLION",
 		xAxisLabel: "NEGOTIATED RATE, FROM INSTITUTIONS (%)",
-		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)"
+		xAxisShort: "NEGOTIATED RATE (%)**",
+		xAxisFootnote: "**FROM INSTITUTIONS",
+		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)",
+		yAxisShort: "CALCULATED RATE (%)*",
+		yAxisFootnote: "*FROM NIM RePORTER DATABASE"
 	};
 
 	/*	Margin, Width and height */
@@ -460,6 +471,8 @@ BuildWidget.prototype.buildGraphic = function () {
 };
 
 BuildWidget.prototype.buildAxes = function () {
+	var self = this;
+
 	this.yAxis = d3.svg.axis()
 					.scale(this.yScale)
 					.tickSize(3,0)
@@ -495,7 +508,14 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + -(this.params.margin.left * 0.6) + "," + (this.params.height / 2) + "), rotate(-90)")
 		.style("text-anchor", "middle")
-		.text(this.params.key.yAxisLabel);
+		// .text(this.params.key.yAxisLabel);
+		.text(function () {
+			if ( self.params.width > 350  ) {
+				return self.params.key.yAxisLabel;
+			} else {
+				return self.params.key.yAxisShort;
+			}
+		});
 
 	/*	Prepare the x axis */
 	this.svg.append("g")
@@ -512,7 +532,14 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.7) + ")")
 		.style("text-anchor","middle")
-		.text(this.params.key.xAxisLabel);
+		// .text(this.params.key.xAxisLabel);
+		.text(function () {
+			if ( self.params.width > 350  ) {
+				return self.params.key.xAxisLabel;
+			} else {
+				return self.params.key.xAxisShort;
+			}
+		});
 		
 };
 
@@ -643,7 +670,6 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.transition()
 			.duration(self.params.duration)
 			.attr("r", function (d) {
-				// return main ? self.radiusScale(d.intFunding) : 1;
 				if ( main ) {
 					if ( self.params.width > 350  ) {
 						return self.radiusScale(d.intFunding)
@@ -1061,6 +1087,10 @@ BuildWidget.prototype.buildCheckboxes = function (target) {
 		});
 };
 
+BuildWidget.prototype.buildFootnote = function(target) {
+	d3.select(target).text(this.params.key.yAxisFootnote + " " + this.params.key.xAxisFootnote);
+};
+
 BuildWidget.prototype.updateData = function () {
 	var selectedStates = [];
 
@@ -1136,6 +1166,7 @@ BuildWidget.prototype.updateView = function () {
 						idcGraphic.buildButton(idcGraphic.keyGroup);
 					} else {
 						idcGraphic.buildColourList("#key");
+						idcGraphic.buildFootnote("#widget-footnote");
 					}
 
 					$(".outer-wrapper #show-hide-state").click(function () {

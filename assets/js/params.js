@@ -20,7 +20,11 @@ function buildParams () {
 		horizontalShift: 25,
 		keyHead: "TOTAL, NIH FUNDING FOR 2013, US$ MILLION",
 		xAxisLabel: "NEGOTIATED RATE, FROM INSTITUTIONS (%)",
-		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)"
+		xAxisShort: "NEGOTIATED RATE (%)**",
+		xAxisFootnote: "**FROM INSTITUTIONS",
+		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)",
+		yAxisShort: "CALCULATED RATE (%)*",
+		yAxisFootnote: "*FROM NIM RePORTER DATABASE"
 	};
 
 	/*	Margin, Width and height */

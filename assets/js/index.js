@@ -36,6 +36,7 @@
 						idcGraphic.buildButton(idcGraphic.keyGroup);
 					} else {
 						idcGraphic.buildColourList("#key");
+						idcGraphic.buildFootnote("#widget-footnote");
 					}
 
 					$(".outer-wrapper #show-hide-state").click(function () {

@@ -76,6 +76,10 @@
   display: inline-block;
   margin: 10px;
 }
+.outer-wrapper .widget-footnote {
+  font-size: 0.8em;
+  color: #666;
+}
 .outer-wrapper .options {
   margin: 10px;
 }
