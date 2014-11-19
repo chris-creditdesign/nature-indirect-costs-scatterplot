@@ -85,6 +85,7 @@
 .outer-wrapper .widget-footnote {
   font-size: 0.8em;
   color: #666;
+  display: none;
 }
 .outer-wrapper .options {
   margin: 10px;
@@ -1120,7 +1121,9 @@ BuildWidget.prototype.buildCheckboxes = function (target, data) {
 };
 
 BuildWidget.prototype.buildFootnote = function(target) {
-	d3.select(target).text(this.params.key.yAxisFootnote + " " + this.params.key.xAxisFootnote);
+	d3.select(target)
+		.style("display", "block")
+		.text(this.params.key.yAxisFootnote + " " + this.params.key.xAxisFootnote);
 };
 
 BuildWidget.prototype.updateData = function () {
