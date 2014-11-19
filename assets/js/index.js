@@ -1,8 +1,6 @@
 (function() {
 		var init = function($)
 		{
-		/*	Both jQuery and D3 are available so hide the status message and show the graphic */
-
 			/*	Load D3 */
 			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 

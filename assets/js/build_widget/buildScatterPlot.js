@@ -20,8 +20,6 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			})
 			.attr("stroke", self.params.uiColour.darkGrey)
 			.attr("stroke-width", 0)
-			// .transition()
-			// .duration(self.params.duration)
 			.classed("hidden", false)
 			.attr("r", function (d) {
 				if ( main ) {
@@ -51,20 +49,6 @@ BuildWidget.prototype.updateScatterPlot = function () {
 				return self.yScale(d.floatCalculated_indirect_cost);
 			})
 			.classed("hidden", false);
-			// .attr("hidden", )
-			// .transition()
-			// .duration(self.params.duration)
-			// .attr("r", function (d) {
-			// 	if ( main ) {
-			// 		if ( self.params.width > 350  ) {
-			// 			return self.radiusScale(d.intFunding)
-			// 		} else {
-			// 			return 3;
-			// 		}
-			// 	} else {
-			// 		return 1;
-			// 	}
-			// });
 };
 
 BuildWidget.prototype.exitScatterPlot = function () {
@@ -76,8 +60,4 @@ BuildWidget.prototype.exitScatterPlot = function () {
 		})
 		.exit()
 		.classed("hidden", true);
-		// .transition()
-		// .duration(self.params.duration)
-		// .attr("r", 0);
-		// .remove();
 };
