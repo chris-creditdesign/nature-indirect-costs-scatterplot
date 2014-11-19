@@ -58,23 +58,29 @@
 
 	.chart {
 		position: relative;
-	}
+	
+		.axis {
+			path, line {
+				fill: none;
+				stroke: #666;
+				shape-rendering: crispEdges;
+			}
 
-	.axis {
-		path, line {
-			fill: none;
-			stroke: #666;
+		}
+
+		text {
+			font-family: sans-serif;
+			fill: #666;
+			font-size: 13px;
 			shape-rendering: crispEdges;
 		}
 
+		circle {
+			-webkit-transition: opacity 0.2s ease;
+			transition: opacity 0.2s ease;
+		}
 	}
 
-	text {
-		font-family: sans-serif;
-		fill: #666;
-		font-size: 13px;
-		shape-rendering: crispEdges;
-	} 
 
 	.scatterGroup circle {
 		cursor: pointer;
@@ -107,6 +113,7 @@
 
 	.hidden {
 		opacity: 0;
+		pointer-events: none;
 	}
 	
 	.palette {
@@ -142,14 +149,14 @@
 		}
 	}
 
-	.options .choose-state {
+	.options .choose-state, .options .choose-type {
 		position: absolute;
 		left: -5000%;
 		height: 0;
 		opacity: 0;
 	}
 
-	.options.open-section .choose-state {
+	.options.open-section .choose-state, .options.open-section .choose-type  {
 		position: relative;
 		left: 0;
 		height: auto;
@@ -168,7 +175,7 @@
 		transform: rotate(180deg);
 	}
 
-	.choose-state {
+	.choose-state, .choose-type {
 		@include breakpoint(large-screen) { 
 			-webkit-column-count: 3;
 			-moz-column-count: 3;
@@ -192,6 +199,7 @@
 	ul {
 		overflow: visible;
 		padding-left: 0px;
+		margin: 0;
 		li {
 			list-style: none;
 			padding: 0 0 0 10px;

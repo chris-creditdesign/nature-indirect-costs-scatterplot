@@ -20,8 +20,9 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			})
 			.attr("stroke", self.params.uiColour.darkGrey)
 			.attr("stroke-width", 0)
-			.transition()
-			.duration(self.params.duration)
+			// .transition()
+			// .duration(self.params.duration)
+			.classed("hidden", false)
 			.attr("r", function (d) {
 				if ( main ) {
 					if ( self.params.width > 350  ) {
@@ -48,8 +49,22 @@ BuildWidget.prototype.updateScatterPlot = function () {
 			})
 			.attr("cy", function (d) {
 				return self.yScale(d.floatCalculated_indirect_cost);
-			});
-
+			})
+			.classed("hidden", false);
+			// .attr("hidden", )
+			// .transition()
+			// .duration(self.params.duration)
+			// .attr("r", function (d) {
+			// 	if ( main ) {
+			// 		if ( self.params.width > 350  ) {
+			// 			return self.radiusScale(d.intFunding)
+			// 		} else {
+			// 			return 3;
+			// 		}
+			// 	} else {
+			// 		return 1;
+			// 	}
+			// });
 };
 
 BuildWidget.prototype.exitScatterPlot = function () {
@@ -60,8 +75,9 @@ BuildWidget.prototype.exitScatterPlot = function () {
 			return d.organization_name;
 		})
 		.exit()
-		.transition()
-		.duration(self.params.duration)
-		.attr("r", 0)
-		.remove();
+		.classed("hidden", true);
+		// .transition()
+		// .duration(self.params.duration)
+		// .attr("r", 0);
+		// .remove();
 };

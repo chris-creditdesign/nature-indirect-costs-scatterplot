@@ -1,11 +1,11 @@
-BuildWidget.prototype.buildCheckboxes = function (target) {
-	this.data.state.unshift("ALL");
+BuildWidget.prototype.buildCheckboxes = function (target, data) {
+	
 
 	/* Create checkboxes for each site */
 	d3.select(target)
 		.append("ul")
 		.selectAll('li')
-	  .data(this.data.state)
+	  .data(data)
 	  	.enter()
 		.append("li")
 		.html(function (d, i) {

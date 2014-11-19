@@ -32,16 +32,20 @@
 .outer-wrapper .chart {
   position: relative;
 }
-.outer-wrapper .axis path, .outer-wrapper .axis line {
+.outer-wrapper .chart .axis path, .outer-wrapper .chart .axis line {
   fill: none;
   stroke: #666;
   shape-rendering: crispEdges;
 }
-.outer-wrapper text {
+.outer-wrapper .chart text {
   font-family: sans-serif;
   fill: #666;
   font-size: 13px;
   shape-rendering: crispEdges;
+}
+.outer-wrapper .chart circle {
+  -webkit-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 .outer-wrapper .scatterGroup circle {
   cursor: pointer;
@@ -70,6 +74,7 @@
 }
 .outer-wrapper .hidden {
   opacity: 0;
+  pointer-events: none;
 }
 .outer-wrapper .palette {
   border-left: 20px solid;
@@ -97,13 +102,13 @@
   margin-left: 10px;
   transition: transform 0.3s ease;
 }
-.outer-wrapper .options .choose-state {
+.outer-wrapper .options .choose-state, .outer-wrapper .options .choose-type {
   position: absolute;
   left: -5000%;
   height: 0;
   opacity: 0;
 }
-.outer-wrapper .options.open-section .choose-state {
+.outer-wrapper .options.open-section .choose-state, .outer-wrapper .options.open-section .choose-type {
   position: relative;
   left: 0;
   height: auto;
@@ -119,7 +124,7 @@
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
-.outer-wrapper .choose-state {
+.outer-wrapper .choose-state, .outer-wrapper .choose-type {
   -webkit-transition: opacity 0.4s ease;
   transition: opacity 0.4s ease;
   background-color: #ddd;
@@ -127,14 +132,14 @@
   overflow: hidden;
 }
 @media (min-width: 630px) {
-  .outer-wrapper .choose-state {
+  .outer-wrapper .choose-state, .outer-wrapper .choose-type {
     -webkit-column-count: 3;
     -moz-column-count: 3;
     column-count: 3;
   }
 }
 @media (max-width: 629px) {
-  .outer-wrapper .choose-state {
+  .outer-wrapper .choose-state, .outer-wrapper .choose-type {
     -webkit-column-count: 2;
     -moz-column-count: 2;
     column-count: 2;
@@ -143,6 +148,7 @@
 .outer-wrapper ul {
   overflow: visible;
   padding-left: 0px;
+  margin: 0;
 }
 .outer-wrapper ul li {
   list-style: none;
@@ -199,7 +205,7 @@
 	<div class="key" id="key"></div>
 
 	<section class="options">
-		<button id="show-hide-state">Select by state
+		<button id="show-hide">Select by state
 			<span>
 				<svg x="0px" y="0px" width="15px" height="10px">
 					<path d="M0,0 L15,0 7.5,10 Z" fill="#fff"></path>
@@ -208,6 +214,18 @@
 		</button>
 		<form class="choose-state" id="states"></form>
 	</section>
+
+	<section class="options">
+		<button id="show-hide">Select by institution type
+			<span>
+				<svg x="0px" y="0px" width="15px" height="10px">
+					<path d="M0,0 L15,0 7.5,10 Z" fill="#fff"></path>
+				</svg>
+			</span>
+		</button>
+		<form class="choose-type" id="type"></form>
+	</section>
+
 
 	<p class="widget-footnote" id="widget-footnote"></p>
 
@@ -307,10 +325,13 @@ function buildData (data) {
 
 		if (data[i].institution_type === "Higher Ed") {
 			data[i].institution_type = "Universities";
+			data[i].institution_type_id = "universities";
 		} else if (data[i].institution_type === "Hosp") {
 			data[i].institution_type = "Hospitals";
+			data[i].institution_type_id = "hospitals";
 		} else if (data[i].institution_type === "NP res inst") {
 			data[i].institution_type = "Non-profits";
+			data[i].institution_type_id = "non-profits";
 		}
 
 		var my_state = data[i].state;
@@ -354,6 +375,7 @@ function buildData (data) {
 	}
 
 	statesArray.sort();
+	statesArray.unshift("ALL");
 
 	return {
 		data: data,
@@ -661,8 +683,9 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			})
 			.attr("stroke", self.params.uiColour.darkGrey)
 			.attr("stroke-width", 0)
-			.transition()
-			.duration(self.params.duration)
+			// .transition()
+			// .duration(self.params.duration)
+			.classed("hidden", false)
 			.attr("r", function (d) {
 				if ( main ) {
 					if ( self.params.width > 350  ) {
@@ -689,8 +712,22 @@ BuildWidget.prototype.updateScatterPlot = function () {
 			})
 			.attr("cy", function (d) {
 				return self.yScale(d.floatCalculated_indirect_cost);
-			});
-
+			})
+			.classed("hidden", false);
+			// .attr("hidden", )
+			// .transition()
+			// .duration(self.params.duration)
+			// .attr("r", function (d) {
+			// 	if ( main ) {
+			// 		if ( self.params.width > 350  ) {
+			// 			return self.radiusScale(d.intFunding)
+			// 		} else {
+			// 			return 3;
+			// 		}
+			// 	} else {
+			// 		return 1;
+			// 	}
+			// });
 };
 
 BuildWidget.prototype.exitScatterPlot = function () {
@@ -701,10 +738,11 @@ BuildWidget.prototype.exitScatterPlot = function () {
 			return d.organization_name;
 		})
 		.exit()
-		.transition()
-		.duration(self.params.duration)
-		.attr("r", 0)
-		.remove();
+		.classed("hidden", true);
+		// .transition()
+		// .duration(self.params.duration)
+		// .attr("r", 0);
+		// .remove();
 };
 
 BuildWidget.prototype.buildTooltip = function () {
@@ -1060,14 +1098,14 @@ BuildWidget.prototype.buildButton = function (target) {
 					.attr("stroke-width", 4);
 };
 
-BuildWidget.prototype.buildCheckboxes = function (target) {
-	this.data.state.unshift("ALL");
+BuildWidget.prototype.buildCheckboxes = function (target, data) {
+	
 
 	/* Create checkboxes for each site */
 	d3.select(target)
 		.append("ul")
 		.selectAll('li')
-	  .data(this.data.state)
+	  .data(data)
 	  	.enter()
 		.append("li")
 		.html(function (d, i) {
@@ -1087,22 +1125,29 @@ BuildWidget.prototype.buildFootnote = function(target) {
 
 BuildWidget.prototype.updateData = function () {
 	var selectedStates = [];
+	var selectedTypes = [];
 
-	var checkboxes = jQuery('.outer-wrapper #states input:checked');
+	var checkboxesState = jQuery('.outer-wrapper #states input:checked');
+	var checkboxesType = jQuery('.outer-wrapper #type input:checked');
 
 	/* First remove the existing data from the arrays */
 	while (this.data.activeData.length > 0) {
 		this.data.activeData.shift();
 	}
 
-	for (var i = 0; i < checkboxes.length; i++) {
-		selectedStates.push(checkboxes.eq(i).val());
+	for (var i = 0; i < checkboxesState.length; i++) {
+		selectedStates.push(checkboxesState.eq(i).val());
+	};
+
+	for (var i = 0; i < checkboxesType.length; i++) {
+		selectedTypes.push(checkboxesType.eq(i).val());
 	};
 
 	for (var i = 0; i < this.data.filteredData.length; i++) {
 		var thisState = this.data.filteredData[i].stateID;
+		var thisType = this.data.filteredData[i].institution_type_id;
 		
-		if (selectedStates.indexOf(thisState) !== -1) {
+		if ((selectedStates.indexOf(thisState) !== -1) && (selectedTypes.indexOf(thisType) !== -1)) {
 			this.data.activeData.push(this.data.filteredData[i]);
 		}
 	}
@@ -1130,19 +1175,20 @@ BuildWidget.prototype.updateView = function () {
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
-			// $.getScript("http://d3js.org/d3.v3.min.js", function() {
+			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
-				d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
-				// d3.csv("http://www.nature.com/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
-				// d3.csv("data/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("http://www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (data) {
+				d3.csv("data/indirect-costs-calculated.txt", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			
 
 					var idcGraphic = new BuildWidget("#idc-graphic", params, idcData);
 
-					idcGraphic.buildCheckboxes("#states");
+					idcGraphic.buildCheckboxes("#type", idcGraphic.data.type);
+					idcGraphic.buildCheckboxes("#states", idcGraphic.data.state);
 					idcGraphic.updateData();
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
@@ -1163,7 +1209,7 @@ BuildWidget.prototype.updateView = function () {
 						idcGraphic.buildFootnote("#widget-footnote");
 					}
 
-					$(".outer-wrapper #show-hide-state").click(function () {
+					$(".outer-wrapper #show-hide").click(function () {
 						var mySection = $(this).parent("section");
 
 						if (!mySection.hasClass("open-section")) {
@@ -1173,8 +1219,8 @@ BuildWidget.prototype.updateView = function () {
 						}
 					});
 
-					$(".outer-wrapper #states input").change(function () {
-						var thisProp; 
+					$(".outer-wrapper .options input").change(function () {
+						var thisProp;
 
 						if ($(this).val() === "all") {
 

@@ -6,19 +6,20 @@
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
-			// $.getScript("http://d3js.org/d3.v3.min.js", function() {
+			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("http://d3js.org/d3.v3.min.js", function() {
 
-				d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
-				// d3.csv("http://www.nature.com/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
-				// d3.csv("data/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("http://www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (data) {
+				d3.csv("data/indirect-costs-calculated.txt", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			
 
 					var idcGraphic = new BuildWidget("#idc-graphic", params, idcData);
 
-					idcGraphic.buildCheckboxes("#states");
+					idcGraphic.buildCheckboxes("#type", idcGraphic.data.type);
+					idcGraphic.buildCheckboxes("#states", idcGraphic.data.state);
 					idcGraphic.updateData();
 					idcGraphic.buildGraphic();
 					idcGraphic.buildScales();
@@ -39,7 +40,7 @@
 						idcGraphic.buildFootnote("#widget-footnote");
 					}
 
-					$(".outer-wrapper #show-hide-state").click(function () {
+					$(".outer-wrapper #show-hide").click(function () {
 						var mySection = $(this).parent("section");
 
 						if (!mySection.hasClass("open-section")) {
@@ -49,8 +50,8 @@
 						}
 					});
 
-					$(".outer-wrapper #states input").change(function () {
-						var thisProp; 
+					$(".outer-wrapper .options input").change(function () {
+						var thisProp;
 
 						if ($(this).val() === "all") {
 

@@ -16,10 +16,13 @@ function buildData (data) {
 
 		if (data[i].institution_type === "Higher Ed") {
 			data[i].institution_type = "Universities";
+			data[i].institution_type_id = "universities";
 		} else if (data[i].institution_type === "Hosp") {
 			data[i].institution_type = "Hospitals";
+			data[i].institution_type_id = "hospitals";
 		} else if (data[i].institution_type === "NP res inst") {
 			data[i].institution_type = "Non-profits";
+			data[i].institution_type_id = "non-profits";
 		}
 
 		var my_state = data[i].state;
@@ -63,6 +66,7 @@ function buildData (data) {
 	}
 
 	statesArray.sort();
+	statesArray.unshift("ALL");
 
 	return {
 		data: data,
