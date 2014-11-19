@@ -158,13 +158,6 @@
   height: auto;
   opacity: 1;
 }
-.outer-wrapper .options button:before {
-  content: "Show ";
-  font-weight: normal;
-}
-.outer-wrapper .options.open-section button:before {
-  content: "Hide ";
-}
 .outer-wrapper .options span {
   -webkit-transform: rotate(0deg);
   -ms-transform: rotate(0deg);
@@ -239,8 +232,9 @@
 </div>
 
 <div class="outer-wrapper" id="idc-graphic">
-	<h2>Headline headline</h2>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores molestiae mollitia, voluptatum, quasi nobis consequatur accusantium odit ab perferendis, odio, adipisci animi cum dolorum harum in minus? Reiciendis consequatur, laudantium.</p>
+	<h2>Overheads under the microscope</h2>
+	<p>In 2013, the US National Institutes of Health (NIH) awarded more than US$5 billion to research institutes for indirect costs: shared overhead expenses such as lighting, heat and maintenance. Institutes negotiate the rate at which they will be reimbursed. Data obtained by Nature reveal the disparity in these negotiated rates and show that the actual rate collected (as calculated by figures in the NIH RePORTER database) is generally much lower than the negotiated rate.</p>
+	<p>Click on a data point to reveal the institution and key stats. Use the axis tabs to select a particular section of the data. You can also select the state (or country, when outside the United States) for which data will appear.</p>
 
 	<div class="chart">
 		<div class="widget-tooltip hidden" id="widget-tooltip">
@@ -315,13 +309,13 @@ function buildParams () {
 		keyRange: [1000000, 100000000, 500000000],
 		verticalShift: [20, 36, 60],
 		horizontalShift: 25,
-		keyHead: "TOTAL, NIH FUNDING FOR 2013, US$ MILLION",
-		xAxisLabel: "NEGOTIATED RATE, FROM INSTITUTIONS (%)",
-		xAxisShort: "NEGOTIATED RATE (%)**",
-		xAxisFootnote: "**FROM INSTITUTIONS",
-		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)",
-		yAxisShort: "CALCULATED RATE (%)*",
-		yAxisFootnote: "*FROM NIM RePORTER DATABASE"
+		keyHead: "Total NIH funding for 2013, US$ million",
+		xAxisLabel: "Negotiated rate, from institutions (%)",
+		xAxisShort: "Negotiated rate (%)**",
+		xAxisFootnote: "**from institutions",
+		yAxisLabel: "Calculated rate, from NIH RePorter database (%)",
+		yAxisShort: "Calculated rate (%)*",
+		yAxisFootnote: "*from NIH RePorter database"
 	};
 
 	/*	Margin, Width and height */
@@ -330,8 +324,8 @@ function buildParams () {
 	params.handleWidth = 10;
 	params.miniMapMargin = 10;
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
-	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
-	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+	params.width = jQuery('.html-widget').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
+	params.height = jQuery('.html-widget').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 
 	params.duration = 450;
 	
@@ -361,11 +355,11 @@ function buildData (data) {
 	for (var i = 0; i < data.length; i++) {
 
 		if (data[i].institution_type === "Higher Ed") {
-			data[i].institution_type = "UNIVERSITIES";
+			data[i].institution_type = "Universities";
 		} else if (data[i].institution_type === "Hosp") {
-			data[i].institution_type = "HOSPITALS";
+			data[i].institution_type = "Hospitals";
 		} else if (data[i].institution_type === "NP res inst") {
-			data[i].institution_type = "NON-PROFITS";
+			data[i].institution_type = "Non-profits";
 		}
 
 		var my_state = data[i].state;
@@ -857,7 +851,7 @@ BuildWidget.prototype.buildBox = function (target) {
 	this.keyBox = target.append("rect")
 		.attr("x", 10)
 		.attr("y", 10)
-		.attr("width", 175)
+		.attr("width", 150)
 		.attr("height", 200)
 		.attr("fill", "#fff")
 		.attr("stroke", this.params.uiColour.grey)
@@ -953,7 +947,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("dy", 13)
 		.text(function (d, i) {
 			if (i === 0) {
-				return "<=" + (d / 1000000);
+				return "≤" + (d / 1000000);
 			} else {
 				return d / 1000000;
 			}
@@ -1073,7 +1067,7 @@ BuildWidget.prototype.buildButton = function (target) {
 		self.keyBox
 			.transition()
 			.duration(self.params.duration)
-			.attr("width", 175)
+			.attr("width", 150)
 			.attr("height", 200);
 	}
 	
@@ -1185,12 +1179,12 @@ BuildWidget.prototype.updateView = function () {
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
-			$.getScript("http://d3js.org/d3.v3.min.js", function() {
+			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			// $.getScript("http://d3js.org/d3.v3.min.js", function() {
 
-				// d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
+				d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
 				// d3.csv("http://www.nature.com/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
-				d3.csv("data/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("data/indirect-costs-calculated.txt", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			

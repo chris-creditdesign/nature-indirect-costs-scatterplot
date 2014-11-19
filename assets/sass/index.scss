@@ -156,15 +156,6 @@
 		opacity: 1;
 	}
 
-	.options button:before {
-		content: "Show ";
-		font-weight: normal;
-	}
-
-	.options.open-section button:before {
-		content: "Hide ";
-	}
-
 	.options span {
 		-webkit-transform: rotate(0deg);
 		-ms-transform: rotate(0deg);

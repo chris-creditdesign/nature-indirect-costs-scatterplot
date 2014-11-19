@@ -18,13 +18,13 @@ function buildParams () {
 		keyRange: [1000000, 100000000, 500000000],
 		verticalShift: [20, 36, 60],
 		horizontalShift: 25,
-		keyHead: "TOTAL, NIH FUNDING FOR 2013, US$ MILLION",
-		xAxisLabel: "NEGOTIATED RATE, FROM INSTITUTIONS (%)",
-		xAxisShort: "NEGOTIATED RATE (%)**",
-		xAxisFootnote: "**FROM INSTITUTIONS",
-		yAxisLabel: "CALCULATED RATE, FROM NIM RePORTER DATABASE (%)",
-		yAxisShort: "CALCULATED RATE (%)*",
-		yAxisFootnote: "*FROM NIM RePORTER DATABASE"
+		keyHead: "Total NIH funding for 2013, US$ million",
+		xAxisLabel: "Negotiated rate, from institutions (%)",
+		xAxisShort: "Negotiated rate (%)**",
+		xAxisFootnote: "**from institutions",
+		yAxisLabel: "Calculated rate, from NIH RePorter database (%)",
+		yAxisShort: "Calculated rate (%)*",
+		yAxisFootnote: "*from NIH RePorter database"
 	};
 
 	/*	Margin, Width and height */
@@ -33,8 +33,8 @@ function buildParams () {
 	params.handleWidth = 10;
 	params.miniMapMargin = 10;
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
-	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
-	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+	params.width = jQuery('.html-widget').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
+	params.height = jQuery('.html-widget').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 
 	params.duration = 450;
 	

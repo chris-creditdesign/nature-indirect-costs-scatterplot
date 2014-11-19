@@ -2,7 +2,7 @@ BuildWidget.prototype.buildBox = function (target) {
 	this.keyBox = target.append("rect")
 		.attr("x", 10)
 		.attr("y", 10)
-		.attr("width", 175)
+		.attr("width", 150)
 		.attr("height", 200)
 		.attr("fill", "#fff")
 		.attr("stroke", this.params.uiColour.grey)
@@ -98,7 +98,7 @@ BuildWidget.prototype.buildRadiusKey = function (target) {
 		.attr("dy", 13)
 		.text(function (d, i) {
 			if (i === 0) {
-				return "<=" + (d / 1000000);
+				return "≤" + (d / 1000000);
 			} else {
 				return d / 1000000;
 			}
@@ -218,7 +218,7 @@ BuildWidget.prototype.buildButton = function (target) {
 		self.keyBox
 			.transition()
 			.duration(self.params.duration)
-			.attr("width", 175)
+			.attr("width", 150)
 			.attr("height", 200);
 	}
 	

@@ -108,13 +108,6 @@
   height: auto;
   opacity: 1;
 }
-.outer-wrapper .options button:before {
-  content: "Show ";
-  font-weight: normal;
-}
-.outer-wrapper .options.open-section button:before {
-  content: "Hide ";
-}
 .outer-wrapper .options span {
   -webkit-transform: rotate(0deg);
   -ms-transform: rotate(0deg);

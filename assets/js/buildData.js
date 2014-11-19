@@ -15,11 +15,11 @@ function buildData (data) {
 	for (var i = 0; i < data.length; i++) {
 
 		if (data[i].institution_type === "Higher Ed") {
-			data[i].institution_type = "UNIVERSITIES";
+			data[i].institution_type = "Universities";
 		} else if (data[i].institution_type === "Hosp") {
-			data[i].institution_type = "HOSPITALS";
+			data[i].institution_type = "Hospitals";
 		} else if (data[i].institution_type === "NP res inst") {
-			data[i].institution_type = "NON-PROFITS";
+			data[i].institution_type = "Non-profits";
 		}
 
 		var my_state = data[i].state;
