@@ -6,13 +6,12 @@
 		$(".outer-wrapper").css("display","block");
 
 			/*	Load D3 */
-			// $.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
-			$.getScript("http://d3js.org/d3.v3.min.js", function() {
+			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			// $.getScript("http://d3js.org/d3.v3.min.js", function() {
 
-				// d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21841!/file/indirect-costs-calculated.txt", function (data) {
-				// d3.csv("http://www.nature.com/widget_assets_polopoly/v515n7527/indirect-costs-calculated.csv", function (data) {
-				// d3.csv("data/indirect-costs-calculated.csv", function (data) {
-				d3.csv("data/indirect-costs-calculated.txt", function (data) {
+				d3.csv("https://poly-admin1.nature.com/polopoly/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("http://www.nature.com/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt", function (data) {
+				// d3.csv("data/indirect-costs-calculated.txt", function (data) {
 					var params = buildParams();
 
 					var idcData = buildData(data);			

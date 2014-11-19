@@ -7,7 +7,7 @@ BuildWidget.prototype.buildTooltip = function () {
 
 			myCircle.attr("stroke-width", 3);
 
-			var tooltipWidth = parseInt(d3.select(".tooltip").style("padding-left"),10) + parseInt(d3.select(".tooltip").style("width"),10) + parseInt(d3.select(".tooltip").style("padding-right"),10);
+			var tooltipWidth = parseInt(d3.select("#widget-tooltip").style("padding-left"),10) + parseInt(d3.select("#widget-tooltip").style("width"),10) + parseInt(d3.select("#widget-tooltip").style("padding-right"),10);
 
 			var top = (parseFloat(myCircle.attr("cy")) + self.params.margin.top);
 			var left = (parseFloat(myCircle.attr("cx")) + self.params.margin.left + self.params.brushThickness + self.params.margin.mid );
@@ -16,7 +16,7 @@ BuildWidget.prototype.buildTooltip = function () {
 				left -= tooltipWidth;
 			}
 
-			d3.select(".tooltip")
+			d3.select("#widget-tooltip")
 				.style("top",  top + "px")
 				.style("left", left + "px")
 				.classed("hidden", false);
@@ -33,5 +33,5 @@ BuildWidget.prototype.buildTooltip = function () {
 };
 
 BuildWidget.prototype.hideTooltip = function () {
-	d3.select(".tooltip").classed("hidden", true);
+	d3.select("#widget-tooltip").classed("hidden", true);
 };

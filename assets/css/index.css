@@ -45,7 +45,7 @@
 .outer-wrapper .scatterGroup circle {
   cursor: pointer;
 }
-.outer-wrapper .tooltip {
+.outer-wrapper .widget-tooltip {
   position: absolute;
   width: 200px;
   height: auto;
@@ -60,10 +60,10 @@
   -webkit-transition: opacity 0.2s ease;
   transition: opacity 0.2s ease;
 }
-.outer-wrapper .tooltip p {
+.outer-wrapper .widget-tooltip p {
   padding: 0;
 }
-.outer-wrapper .tooltip span {
+.outer-wrapper .widget-tooltip span {
   font-weight: bold;
   color: #fff;
 }
