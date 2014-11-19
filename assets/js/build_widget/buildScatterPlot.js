@@ -23,7 +23,16 @@ BuildWidget.prototype.enterScatterPlot = function (target, main) {
 			.transition()
 			.duration(self.params.duration)
 			.attr("r", function (d) {
-				return main ? self.radiusScale(d.intFunding) : 1;
+				// return main ? self.radiusScale(d.intFunding) : 1;
+				if ( main ) {
+					if ( self.params.width > 350  ) {
+						return self.radiusScale(d.intFunding)
+					} else {
+						return 3;
+					}
+				} else {
+					return 1;
+				}
 			});
 
 };
