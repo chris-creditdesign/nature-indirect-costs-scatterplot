@@ -22,9 +22,9 @@ function buildParams () {
 		xAxisLabel: "Negotiated rate, from institutions (%)",
 		xAxisShort: "Negotiated rate (%)**",
 		xAxisFootnote: "**from institutions",
-		yAxisLabel: "Calculated rate, from NIH RePorter database (%)",
+		yAxisLabel: "Calculated rate, from NIH RePORTER database (%)",
 		yAxisShort: "Calculated rate (%)*",
-		yAxisFootnote: "*from NIH RePorter database"
+		yAxisFootnote: "*from NIH RePORTER database"
 	};
 
 	/*	Margin, Width and height */
@@ -38,7 +38,7 @@ function buildParams () {
 
 	params.duration = 450;
 	
-	params.startExtent = [25,75];
+	params.startExtent = [0,105];
 	params.fullExtent = [0,105];
 	params.fullExtentInvert = [105,0];
 
