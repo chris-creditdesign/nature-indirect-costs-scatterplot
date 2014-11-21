@@ -36,7 +36,6 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + -(this.params.margin.left * 0.6) + "," + (this.params.height / 2) + "), rotate(-90)")
 		.style("text-anchor", "middle")
-		// .text(this.params.key.yAxisLabel);
 		.text(function () {
 			if ( self.params.width > 350  ) {
 				return self.params.key.yAxisLabel;
@@ -60,7 +59,6 @@ BuildWidget.prototype.buildAxes = function () {
 	  .append("text")
 		.attr("transform", "translate(" + (this.params.width / 2) + "," + (this.params.margin.bottom * 0.7) + ")")
 		.style("text-anchor","middle")
-		// .text(this.params.key.xAxisLabel);
 		.text(function () {
 			if ( self.params.width > 350  ) {
 				return self.params.key.xAxisLabel;

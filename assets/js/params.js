@@ -33,8 +33,8 @@ function buildParams () {
 	params.handleWidth = 10;
 	params.miniMapMargin = 10;
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
-	params.width = jQuery('.html-widget').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
-	params.height = jQuery('.html-widget').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+	params.width = jQuery('.content').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
+	params.height = jQuery('.content').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 
 	params.duration = 450;
 	
