@@ -351,8 +351,8 @@ function buildParams () {
 	params.handleWidth = 10;
 	params.miniMapMargin = 10;
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
-	params.width = jQuery('.content').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
-	params.height = jQuery('.content').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
+	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 
 	params.duration = 450;
 	
@@ -1211,7 +1211,9 @@ BuildWidget.prototype.updateView = function () {
 			/*	Load D3 */
 			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
-				d3.csv("http://www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (error, data) {
+				// d3.csv("http://www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (error, data) {
+
+				d3.csv("data/indirect-costs-calculated.txt", function (error, data) {
 					
 					if (error) {
 						$(".status-message").css("display","block");
