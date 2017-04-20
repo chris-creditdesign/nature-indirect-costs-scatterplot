@@ -2,9 +2,9 @@
 		var init = function($)
 		{
 			/*	Load D3 */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("//www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
-				d3.csv("http://www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (error, data) {
+				d3.csv("//www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (error, data) {
 					
 					if (error) {
 						$(".status-message").css("display","block");

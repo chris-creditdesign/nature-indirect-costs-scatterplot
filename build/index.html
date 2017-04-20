@@ -243,7 +243,6 @@
 <div class="status-message">
 	<p>This interactive graphic requires a modern browser (e.g. Chrome, Safari or Firefox) with javascript enabled.</p>
 	<p>The data used to build this graphic can be downloaded as comma-separated values in plain-text form here: <a href="http://www.nature.com/polopoly_fs/7.21861!/file/indirect-costs-calculated.txt" title="Download Indirect costs calculated  76K">Indirect costs calculated.txt</a>.</p>
-	
 </div>
 
 <div class="outer-wrapper" id="idc-graphic">
@@ -351,8 +350,8 @@ function buildParams () {
 	params.handleWidth = 10;
 	params.miniMapMargin = 10;
 	params.miniMapThickness = params.margin.left + params.brushThickness - params.miniMapMargin;
-	params.width = jQuery('.section').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
-	params.height = jQuery('.section').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
+	params.width = jQuery('.content').width()  - params.margin.left - params.brushThickness - params.margin.mid - params.margin.right;
+	params.height = jQuery('.content').width() - params.margin.top - params.margin.mid - params.brushThickness - params.margin.bottom;
 
 	params.duration = 450;
 	
@@ -1209,11 +1208,9 @@ BuildWidget.prototype.updateView = function () {
 		var init = function($)
 		{
 			/*	Load D3 */
-			$.getScript("http://www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
+			$.getScript("//www.nature.com/polopoly_static/js/d3.v3.min.js", function() {
 
-				// d3.csv("http://www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (error, data) {
-
-				d3.csv("data/indirect-costs-calculated.txt", function (error, data) {
+				d3.csv("//www.nature.com/polopoly_fs/7.21891!/file/indirect-costs-calculated.txt", function (error, data) {
 					
 					if (error) {
 						$(".status-message").css("display","block");
